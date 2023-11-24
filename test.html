@@ -1,0 +1,49 @@
+<html lang="ja">
+
+<head>
+  <meta charset="utf-8">
+  <title>Matter.js Sample</title>
+</head>
+<body>
+  <canvas id="maincanvas"></canvas>
+  <div id="preview">
+    <text id="previewSize">次のボール: </text>
+    <text id="score">スコア: </text>
+    <p id="output"></p>
+  </div>
+</body>
+  <script src="//cdn.jsdelivr.net/npm/matter-js@0.18.0/build/matter.min.js"></script>
+  <script src="main.js"></script>
+<style>
+#maincanvas{
+    position: absolute;
+    right: 0;
+    left: 0;
+    margin: auto;
+    display: block;
+}
+#preview{
+  position: absolute;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+@media screen and (orientation:portrait){
+  #maincanvas{
+    width: 85%;
+    max-width: 60vh;
+    bottom: 0;
+    padding: 7.5vw;
+  }
+}
+
+@media screen and (orientation:landscape){
+  #maincanvas{
+    height: 75%;
+    bottom: 0;
+  }
+}
+</style>
+</html>
