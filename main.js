@@ -430,24 +430,38 @@ function getNextBallSize() {
 }
 
 window.onload = function () {
-   window.addEventListener(("mousemove" || "touchmove"), function (e) {
-      var ballX = e.offsetX;
-      dropper.position.x = ballX - ballsize[nextBallSize];
-      if (dropper.position.x < ballsize[nextBallSize] + WIDTH / 48){
-         dropper.position.x = ballsize[nextBallSize] + WIDTH / 48;
-      }
-      if (dropper.position.x > WIDTH - ballsize[nextBallSize] - WIDTH / 48){
-         dropper.position.x = WIDTH - ballsize[nextBallSize] - WIDTH / 48;
-      }
-      Matter.Body.setPosition(guide, {x:dropper.position.x, y:HEIGHT / 2 + HEIGHT / 11.75, z:0}, [updateVelocity=false])
+   window.addEventListener("mousemove", function (e) {
+      move(e);
    });
-   window.addEventListener(("click" || "touchend"), function (event) {
-      if (canDrop == true) {
-         canDrop = false;
-         handleCanvasClick();
-      }
+   window.addEventListener("touchmove", function (e) {
+      move(e)
+   });
+   window.addEventListener("click", function (e) {
+      drop();
+   });
+   window.addEventListener("touchend", function (e) {
+      drop();
    });
 };
+
+function move(e){
+   var ballX = e.offsetX;
+   dropper.position.x = ballX - ballsize[nextBallSize];
+   if (dropper.position.x < ballsize[nextBallSize] + WIDTH / 48){
+      dropper.position.x = ballsize[nextBallSize] + WIDTH / 48;
+   }
+   if (dropper.position.x > WIDTH - ballsize[nextBallSize] - WIDTH / 48){
+      dropper.position.x = WIDTH - ballsize[nextBallSize] - WIDTH / 48;
+   }
+   Matter.Body.setPosition(guide, {x:dropper.position.x, y:HEIGHT / 2 + HEIGHT / 11.75, z:0}, [updateVelocity=false]);
+}
+
+function drop(){
+   if (canDrop == true) {
+      canDrop = false;
+      handleCanvasClick();
+   }
+}
 
 function gameover(){
    gameoverdiv.style = "display: block;";
