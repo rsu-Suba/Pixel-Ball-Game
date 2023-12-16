@@ -4,24 +4,11 @@ const WIDTH = windowwidth * 0.85;
 const HEIGHT = (WIDTH / 16) * 27;
 let deviceType = 0;
 
-document.addEventListener ( "touchstart", detectDeviceType );
-document.addEventListener ( "mousemove", detectDeviceType );
-
-function detectDeviceType( event ) {
-	deviceType = event.changedTouches ? 1 : 2 ;
-
-   switch (deviceType){
-      case 1:
-         document.getElementById("mousetouch").innerHTML = `Touch📱`;
-         break;
-      case 2:
-         document.getElementById("mousetouch").innerHTML = `Mouse💻`;
-         break;
-   }
-
-	document.removeEventListener ( "touchstart", detectDeviceType ) ;
-	document.removeEventListener ( "mousemove", detectDeviceType ) ;
+for (let i = 0; i < 11; i++){
+   let path = `./BallTexs/${i}.png`
+   document.getElementById("preloadimg").src = path;
 }
+document.getElementById("preloadimg").style = "display: none;";
 
 const Engine = Matter.Engine;
 const Render = Matter.Render;
@@ -33,18 +20,18 @@ const World = Matter.World;
 
 let canDrop = true;
 let ballsize = [
-   Math.floor(WIDTH / 550 * 18),
-   Math.floor(WIDTH / 550 * 24),
-   Math.floor(WIDTH / 550 * 34),
-   Math.floor(WIDTH / 550 * 39),
-   Math.floor(WIDTH / 550 * 49),
-   Math.floor(WIDTH / 550 * 63),
-   Math.floor(WIDTH / 550 * 81),
-   Math.floor(WIDTH / 550 * 90),
-   Math.floor(WIDTH / 550 * 100),
-   Math.floor(WIDTH / 550 * 124),
-   Math.floor(WIDTH / 550 * 148),
-]; 
+   Math.floor(WIDTH / (550 / 18)),
+   Math.floor(WIDTH / (550 / 24)),
+   Math.floor(WIDTH / (550 / 34)),
+   Math.floor(WIDTH / (550 / 39)),
+   Math.floor(WIDTH / (550 / 49)),
+   Math.floor(WIDTH / (550 / 63)),
+   Math.floor(WIDTH / (550 / 81)),
+   Math.floor(WIDTH / (550 / 90)),
+   Math.floor(WIDTH / (550 / 100)),
+   Math.floor(WIDTH / (550 / 124)),
+   Math.floor(WIDTH / (550 / 148)),
+];
 let points = [
    1,
    3,
@@ -91,7 +78,7 @@ const ground = Bodies.rectangle(WIDTH / 2, HEIGHT, WIDTH, HEIGHT / 35, {
    collisionFilter: { category: 0b0001 },
    label: "ground",
 });
-const topground = Bodies.rectangle(WIDTH / 2, HEIGHT / 4.25, WIDTH, 5, {
+const topground = Bodies.rectangle(WIDTH / 2, HEIGHT / 3.5, WIDTH, 5, {
    render: {
       fillStyle: "transparent",
    },
@@ -281,24 +268,45 @@ Events.on(engine, "collisionStart", function (event) {
    let pairs = event.pairs;
    for (const pair of pairs) {
       const { bodyA, bodyB } = pair;
-      console.log(bodyA.label);
-      console.log(bodyB.label);
+      console.log(`You: ${bodyA.label}`);
+      console.log(`Me: ${bodyB.label}`);
       //bodyA→相手
       //bodyB→自分
-      if (bodyA.label === "topground" && bodyB.label === "Circle Body2"){
+      if (bodyA.label === "topground" && (bodyB.label === "Circle Body4" || bodyB.label === "Circle Body3")){
          console.log("gameover1");
          gameover();
       }
-      if ((bodyA.label === "ground" || bodyA.label === "Circle Body2") && bodyB.label === "Circle Body") {
-         bodyB.label = "Circle Body2";
-         bodyB.collisionFilter.mask = "0b0111";
-         canDrop = true;
+      //Circle Body = Nothing
+      //Circle Body2 = ground
+      //Circle Body3 = ball
+      //Circle Body4 = ground & ball
+      if (bodyA.label === "ground") {
+         if (bodyB.label === "Circle Body"){
+            bodyB.label = "Circle Body2";
+            bodyB.collisionFilter.mask = "0b0011";
+            canDrop = true;
+         }
+         else if (bodyB.label === "Circle Body3"){
+            bodyB.label = "Circle Body4";
+            bodyB.collisionFilter.mask = "0b0111";
+            canDrop = true;
+         }
       }
-      if (bodyA.label === "Circle Body2") {
+      else if (bodyA.label === "Circle Body2" || bodyA.label === "Circle Body3" || bodyA.label === "Circle Body4"){
+         if (bodyB.label === "Circle Body"){
+            bodyB.label = "Circle Body3";
+            bodyB.collisionFilter.mask = "0b0111";
+            canDrop = true;
+         }
+         else if (bodyB.label === "Circle Body2"){
+            bodyB.label = "Circle Body4";
+            bodyB.collisionFilter.mask = "0b0111";
+            canDrop = true;
+         }
          if (bodyA.circleRadius == bodyB.circleRadius) {
             score += points[ballsize.indexOf(bodyA.circleRadius, 0)];
             scoreSpan.innerText = `${score}`;
-            if (bodyA.circleRadius < 240) {
+            if (bodyA.circleRadius < Math.floor(WIDTH / 550 * 148)) {
                let nextsize = ballsize.indexOf(bodyA.circleRadius, 0) + 1;
                let size = ballsize[nextsize];
                const newX = (bodyA.position.x + bodyB.position.x) / 2;
@@ -313,8 +321,8 @@ Events.on(engine, "collisionStart", function (event) {
                   },
                   restitution: 0.17,
                   friction: 0.3,
-                  angle: Math.random(0, 360),
-                  label: "Circle Body2",
+                  angle: Math.floor(Math.random() * 360),
+                  label: "Circle Body",
                   collisionFilter: { category: 0b0010 , mask: 0b0111},
                });
                World.remove(engine.world, [bodyA, bodyB]);
@@ -367,14 +375,14 @@ function handleCanvasClick() {
          if (mode == 0){
             engine.gravity.x = -0.85;
             engine.gravity.y = 0.5;
-            ground.label = "ground";
+            ground.label = "wall";
             left.label = "ground";
             right.label = "wall";
          }
          else if (mode == 1){
             engine.gravity.x = 0.85;
             engine.gravity.y = 0.5;
-            ground.label = "ground";
+            ground.label = "wall";
             left.label = "wall";
             right.label = "ground";
          }
@@ -421,15 +429,8 @@ function getNextBallSize() {
    return Math.floor(Math.random() * 4);
 }
 
-window.addEventListener("click", function (event) {
-   if (canDrop == true) {
-      canDrop = false;
-      handleCanvasClick();
-   }
-});
-
 window.onload = function () {
-   window.addEventListener("mousemove", function (e) {
+   window.addEventListener(("mousemove" || "touchmove"), function (e) {
       var ballX = e.offsetX;
       dropper.position.x = ballX - ballsize[nextBallSize];
       if (dropper.position.x < ballsize[nextBallSize] + WIDTH / 48){
@@ -439,6 +440,12 @@ window.onload = function () {
          dropper.position.x = WIDTH - ballsize[nextBallSize] - WIDTH / 48;
       }
       Matter.Body.setPosition(guide, {x:dropper.position.x, y:HEIGHT / 2 + HEIGHT / 11.75, z:0}, [updateVelocity=false])
+   });
+   window.addEventListener(("click" || "touchend"), function (event) {
+      if (canDrop == true) {
+         canDrop = false;
+         handleCanvasClick();
+      }
    });
 };
 

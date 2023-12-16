@@ -50,8 +50,9 @@ body{
     transform-origin: top;
   }
 
-  .mousetouch {
-    position: fixed;
+  .preloadimg {
+    position: absolute;
+    width: 60%;
   }
 
 #maincanvas{
