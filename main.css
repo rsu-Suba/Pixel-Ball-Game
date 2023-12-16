@@ -1,0 +1,154 @@
+@import url('https://fonts.googleapis.com/css2?family=Carter+One&display=swap');
+
+body{
+    background-color: #f4eebc;
+    overflow: hidden;
+  }
+
+  text {
+    font-family: 'Pixelify Sans';
+  }
+
+  .background-solid {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: -1;
+    perspective: 30vh;
+  }
+
+  .bg-wall {
+    filter: blur(0.4vh);
+    height: 60%;
+    width: 100%;
+    position: relative;
+    background: rgb(198,142,81);
+    background: linear-gradient(180deg, rgba(198,142,81,1) 0%, rgba(198,142,81,1) 70%, rgba(178,117,37,1) 70%, rgba(178,117,37,1) 84%, rgba(206,164,90,1) 84%, rgba(206,164,90,1) 88%, rgba(219,184,145,1) 88%, rgba(219,184,145,1) 90%, rgba(206,164,90,1) 90%, rgba(206,164,90,1) 100%);
+  }
+
+  .bg-grid {
+    height: 40%;
+    width: 100%;
+    z-index: 2;
+    background-image :
+    repeating-linear-gradient(to bottom,
+  rgba(214, 182, 121, 0.5),
+  rgba(214, 182, 121, 0.5) 3vh,
+  rgba(0, 0, 0, 0) 0,
+  rgba(0, 0, 0, 0) 8vh),
+    repeating-linear-gradient(to right,    
+  rgba(214, 182, 121, 0.5),
+  rgba(214, 182, 121, 0.5) 6vh,
+  rgba(0, 0, 0, 0) 0,
+  rgba(0, 0, 0, 0) 15vh);
+    background-color : #f4ebb0;
+    transform: rotateX(45deg);
+    transform-origin: top;
+  }
+
+  .mousetouch {
+    position: fixed;
+  }
+
+#maincanvas{
+    position: absolute;
+    right: 0;
+    left: 0;
+    margin: auto;
+    display: block;
+}
+
+@media screen and (orientation:portrait){
+  #maincanvas{
+    bottom: 7vw;
+    max-width: 47.5vh;
+    z-index: -1;
+  }
+
+  .data {
+    position: absolute;
+    height: 25vh;
+    max-height: 45vw;
+    top: 1.5vw;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .sinkabase, .scoreimg, .sinka, .score, .circle{
+    position: relative;
+    height: 100%;
+    aspect-ratio: 1;
+  }
+
+  .nextball{
+    height: 25%;
+    aspect-ratio: 1;
+    position: absolute;
+    margin: auto;
+    top: 0;
+    bottom: 0.25vh;
+    left: 0;
+    right: 0;
+  }
+
+  .scoretext {
+    display: inline-block;
+    font-family: 'Carter One';
+    background: -webkit-linear-gradient(180deg, #fcf9ee 30%, #e0a31f 80%);
+    background: linear-gradient(180deg, #fcf9ee 30%, #e0a31f 80%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -webkit-text-stroke: 2px #a96b17;
+    text-stroke: 1px #a96b17;
+    font-size: min(8vw, max(4.5vh));
+    text-align: center;
+    font-weight: 600;
+    position: absolute;
+    margin: 34% 0;
+    height: 10.5vw;
+    max-height: 6.2vh;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+
+  .gameover{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 100%;
+    height: 25%;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    display: block;
+  }
+
+  .gameover text{
+    background-color: white;
+    border: solid 2px black;
+    padding: 2vw 3vw;
+    position: relative;
+    margin: 0 auto;
+    font-size: 5vw;
+    bottom: 0;
+  }
+}
+
+@media screen and (orientation:landscape){
+  #maincanvas{
+    height: 75%;
+    bottom: 0;
+  }
+}

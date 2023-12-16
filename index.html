@@ -1,49 +1,32 @@
 <html lang="ja">
-
 <head>
   <meta charset="utf-8">
-  <title>Matter.js Sample</title>
+  <meta name="viewport" content="width=device-width"/>
+  <meta name="theme-color" content="#72d20f"/>
+  <link rel="stylesheet" href="main.css">
+  <title>iPhone Camera Game</title>
 </head>
 <body>
+  <div class="background-solid">
+    <div class="bg-wall"></div>
+    <div class="bg-grid"></div>
+  </div>
   <canvas id="maincanvas"></canvas>
-  <div id="preview">
-    <text id="previewSize">次のボール: </text>
-    <text id="score">スコア: </text>
-    <p id="output"></p>
+  <text id="mousetouch">🤯</text>
+  <div class="data">
+    <div class="score">
+      <img class="scoreimg" src="./Score.png"/>
+      <div class="scoretext" id="scoretext"></div>
+    </div>
+    <div class="sinka">
+      <img class="sinkabase" src="./Sinka.png"/>
+      <img class="nextball" id="nextball" src="./BallTexs/0.png"/>
+    </div>
+  </div>
+  <div class="gameover" id="gameover">
+    <text>Game Over (՞ ᴗ ̫ ᴗ՞)"</text>
   </div>
 </body>
-  <script src="//cdn.jsdelivr.net/npm/matter-js@0.18.0/build/matter.min.js"></script>
+  <script src="matter.js"></script>
   <script src="main.js"></script>
-<style>
-#maincanvas{
-    position: absolute;
-    right: 0;
-    left: 0;
-    margin: auto;
-    display: block;
-}
-#preview{
-  position: absolute;
-  top: 0;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-@media screen and (orientation:portrait){
-  #maincanvas{
-    width: 85%;
-    max-width: 60vh;
-    bottom: 0;
-    padding: 7.5vw;
-  }
-}
-
-@media screen and (orientation:landscape){
-  #maincanvas{
-    height: 75%;
-    bottom: 0;
-  }
-}
-</style>
 </html>

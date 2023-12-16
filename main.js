@@ -1,6 +1,27 @@
 const canvas = document.getElementById("maincanvas");
-const WIDTH = 600;
-const HEIGHT = (WIDTH / 4) * 5;
+const windowwidth = window.innerWidth;
+const WIDTH = windowwidth * 0.85;
+const HEIGHT = (WIDTH / 16) * 27;
+let deviceType = 0;
+
+document.addEventListener ( "touchstart", detectDeviceType );
+document.addEventListener ( "mousemove", detectDeviceType );
+
+function detectDeviceType( event ) {
+	deviceType = event.changedTouches ? 1 : 2 ;
+
+   switch (deviceType){
+      case 1:
+         document.getElementById("mousetouch").innerHTML = `Touch📱`;
+         break;
+      case 2:
+         document.getElementById("mousetouch").innerHTML = `Mouse💻`;
+         break;
+   }
+
+	document.removeEventListener ( "touchstart", detectDeviceType ) ;
+	document.removeEventListener ( "mousemove", detectDeviceType ) ;
+}
 
 const Engine = Matter.Engine;
 const Render = Matter.Render;
@@ -10,25 +31,40 @@ const Composite = Matter.Composite;
 const Events = Matter.Events;
 const World = Matter.World;
 
-let objects = [];
 let canDrop = true;
-let ground;
-let balli = 0;
-let ballsize = [25, 50, 75, 100, 125, 150, 175, 200];
-let score = 0;
-let ballcolor = [
-   "#bc8cff",
-   "#8cffea",
-   "#ff8c9c",
-   "#c2ff8c",
-   "#ffc68c",
-   "#ff87fb",
-   "#5afab7",  
-   "#b50000",
+let ballsize = [
+   Math.floor(WIDTH / 550 * 18),
+   Math.floor(WIDTH / 550 * 24),
+   Math.floor(WIDTH / 550 * 34),
+   Math.floor(WIDTH / 550 * 39),
+   Math.floor(WIDTH / 550 * 49),
+   Math.floor(WIDTH / 550 * 63),
+   Math.floor(WIDTH / 550 * 81),
+   Math.floor(WIDTH / 550 * 90),
+   Math.floor(WIDTH / 550 * 100),
+   Math.floor(WIDTH / 550 * 124),
+   Math.floor(WIDTH / 550 * 148),
+]; 
+let points = [
+   1,
+   3,
+   6,
+   10,
+   15,
+   21,
+   36,
+   45,
+   55,
+   66,
+   78
 ];
-const previewSizeSpan = document.getElementById("previewSize");
-const scoreSpan = document.getElementById("score");
-scoreSpan.innerHTML = `スコア : 0`;
+let score = 0;
+
+const scoreSpan = document.getElementById("scoretext");
+const nextball = document.getElementById("nextball");
+const gameoverdiv = document.getElementById("gameover");
+scoreSpan.innerHTML = `0`;
+gameoverdiv.style = "display: none;";
 
 const engine = Engine.create();
 const render = Render.create({
@@ -38,35 +74,208 @@ const render = Render.create({
    options: {
       width: WIDTH,
       height: HEIGHT,
-      showAngleIndicator: true,
-      showCollisions: true,
-      showDebug: false,
-      showIds: true,
-      showVelocity: true,
       hasBounds: true,
       wireframes: false,
-      background: "#efeaff",
+      background: "transparent",
    },
 });
 
-console.log(canvas.offsetWidth);
+const framecolor = "#f3d583";
+const framepanelcolor = "rgba(255, 245, 225, 0.3)";
 
-ground = Bodies.rectangle(WIDTH / 2, HEIGHT, WIDTH, 30, {
+const ground = Bodies.rectangle(WIDTH / 2, HEIGHT, WIDTH, HEIGHT / 35, {
+   render: {
+      fillStyle: framecolor,
+   },
    isStatic: true,
-   collisionFilter: {category: 0x0002},
+   collisionFilter: { category: 0b0001 },
+   label: "ground",
 });
-const left = Bodies.rectangle(0, HEIGHT / 2 + 40, 25, HEIGHT - 80, {
+const topground = Bodies.rectangle(WIDTH / 2, HEIGHT / 4.25, WIDTH, 5, {
+   render: {
+      fillStyle: "transparent",
+   },
    isStatic: true,
-   collisionFilter: {category: 0x0001},
+   collisionFilter: { category: 0b0100 },
+   label: "topground",
 });
-const right = Bodies.rectangle(WIDTH, HEIGHT / 2 + 40, 25, HEIGHT - 80, {
+const left = Bodies.rectangle(0, HEIGHT / 2 + HEIGHT / 7, HEIGHT / 35, HEIGHT - HEIGHT / 3.5, {
+   render: {
+      fillStyle: framecolor,
+   },
    isStatic: true,
-   collisionFilter: {category: 0x0001},
+   collisionFilter: { category: 0b0001 },
+   label: "wall",
 });
+const right = Bodies.rectangle(WIDTH, HEIGHT / 2 + HEIGHT / 7, HEIGHT / 35, HEIGHT - HEIGHT / 3.5, {
+   render: {
+      fillStyle: framecolor,
+   },
+   isStatic: true,
+   collisionFilter: { category: 0b0001 },
+   label: "wall",
+});
+const fakeleft = Bodies.rectangle(0, HEIGHT / 4.6, HEIGHT / 35, HEIGHT / 7.25, {
+   render: {
+      fillStyle: "transparent",
+   },
+   isStatic: true,
+   collisionFilter: { category: 0b0001 },
+   label: "fakewall",
+});
+const fakeright = Bodies.rectangle(WIDTH, HEIGHT / 4.6, HEIGHT / 35, HEIGHT / 7.25, {
+   render: {
+      fillStyle: "transparent",
+   },
+   isStatic: true,
+   collisionFilter: { category: 0b0001 },
+   label: "fakewall",
+});
+const frameleft = Bodies.rectangle(HEIGHT / 30, HEIGHT / 4, HEIGHT / 60, HEIGHT / 10, {
+   render: {
+      fillStyle: framecolor,
+   },
+   isStatic: true,
+   collisionFilter: { category: 0b1000 },
+   angle: (Math.PI / 180) * 35,
+   label: "frameleft",
+});
+const frameright = Bodies.rectangle(WIDTH - (HEIGHT / 30), HEIGHT / 4, HEIGHT / 60, HEIGHT / 10, {
+   render: {
+      fillStyle: framecolor,
+   },
+   isStatic: true,
+   collisionFilter: { category: 0b1000 },
+   angle: (Math.PI / 180) * -35,
+   label: "frameright",
+});
+const frametop1 = Bodies.rectangle(WIDTH / 2, HEIGHT / 4.69, HEIGHT / 60, WIDTH / 1.24, {
+   render: {
+      fillStyle: framecolor,
+   },
+   isStatic: true,
+   collisionFilter: { category: 0b1000 },
+   angle: (Math.PI / 180) * 90,
+   label: "frametop1",
+});
+const frametop2 = Bodies.rectangle(WIDTH / 2, HEIGHT / 3.4, HEIGHT / 60, WIDTH, {
+   render: {
+      fillStyle: framecolor,
+   },
+   isStatic: true,
+   collisionFilter: { category: 0b1000 },
+   angle: (Math.PI / 180) * 90,
+   label: "frametop2",
+});
+const framefront = Bodies.rectangle(WIDTH / 2, HEIGHT / 1.55, HEIGHT / 1.45, WIDTH, {
+   render: {
+      fillStyle: framepanelcolor,
+   },
+   isStatic: true,
+   collisionFilter: { category: 0b1000 },
+   angle: (Math.PI / 180) * 90,
+   label: "framefront",
+});
+const frameback = Bodies.rectangle(WIDTH / 2, HEIGHT / 1.8, HEIGHT / 1.5, WIDTH / 1.24, {
+   render: {
+      fillStyle: framepanelcolor,
+   },
+   isStatic: true,
+   collisionFilter: { category: 0b1000 },
+   angle: (Math.PI / 180) * 90,
+   label: "frameback",
+});
+const framepanelleft = Bodies.fromVertices(HEIGHT / 29, HEIGHT / 1.675,[
+   {x:0,y:0},
+   {x:WIDTH / 11.5,y:-(HEIGHT / 15)},
+   {x:0,y:HEIGHT / 1.4},
+   {x:WIDTH / 11.5,y:(HEIGHT / 1.5) - (HEIGHT / 15)}], 
+   {
+      render: {
+         fillStyle: framepanelcolor,
+      },
+      isStatic: true,
+      collisionFilter: { category: 0b1000 },
+      angle: (Math.PI / 180) * 0,
+      label: "framepanelleft",
+   },
+   flagInternal=false,
+   removeCollinear=0.01,
+   minimumArea=10,
+   removeDuplicatePoints=0.01
+);
+const framepanelright = Bodies.fromVertices(WIDTH - (HEIGHT / 29), HEIGHT / 1.675,[
+   {x:0,y:0},
+   {x:WIDTH / 11.5,y:HEIGHT / 15},
+   {x:0,y:HEIGHT / 1.49},
+   {x:WIDTH / 11.5,y:(HEIGHT / 1.4) + (HEIGHT / 15)}], 
+   {
+      render: {
+         fillStyle: framepanelcolor,
+      },
+      isStatic: true,
+      collisionFilter: { category: 0b1000 },
+      angle: (Math.PI / 180) * 0,
+      label: "framepanelright",
+   },
+   flagInternal=false,
+   removeCollinear=0.01,
+   minimumArea=10,
+   removeDuplicatePoints=0.01
+);
+const guide = Bodies.rectangle(WIDTH / 2, HEIGHT / 2 + HEIGHT / 11.5, WIDTH / 120, HEIGHT / 1.25,{
+   render: {
+      fillStyle: "#eee",
+      strokeStyle: "#999",
+      lineWidth: 0.6,
+   },
+   restitution: 0,
+   isStatic: true,
+   friction: 0.2,
+   collisionFilter: { category: 0b1000},
+   label: "guide",
+})
 
-World.add(engine.world, [ground, left, right]);
+let maincontainer = [
+   framepanelleft,
+   framepanelright,
+   framefront,
+   frameback,
+   frameleft,
+   frameright,
+   frametop1,
+   guide,
+   frametop2,
+   ground,
+   topground,
+   left,
+   right,
+   fakeleft,
+   fakeright,
+];
+
+/*
+for (let i = 0; i < 11; i++){
+   let ballsample1 = Bodies.circle(WIDTH / 2, 300, ballsize[i], {
+      render: {
+      sprite: {
+      texture: `./BallTexs/${i}.png`,
+      xScale: ballsize[i] / 300,
+      yScale: ballsize[i] / 300,
+      }},
+      restitution: 0,
+      friction: 0.2,
+      angle: 0,
+      collisionFilter: { category: 0x0010 , mask: 0x0011},
+   });
+   World.add(engine.world, ballsample1);
+}
+*/
+
+World.add(engine.world, maincontainer);
 Engine.run(engine);
 Render.run(render);
+
 
 Events.on(engine, "collisionStart", function (event) {
    let pairs = event.pairs;
@@ -74,29 +283,39 @@ Events.on(engine, "collisionStart", function (event) {
       const { bodyA, bodyB } = pair;
       console.log(bodyA.label);
       console.log(bodyB.label);
-      if (pair.bodyA === ground) {
-         console.log("ground");
+      //bodyA→相手
+      //bodyB→自分
+      if (bodyA.label === "topground" && bodyB.label === "Circle Body2"){
+         console.log("gameover1");
+         gameover();
+      }
+      if ((bodyA.label === "ground" || bodyA.label === "Circle Body2") && bodyB.label === "Circle Body") {
+         bodyB.label = "Circle Body2";
+         bodyB.collisionFilter.mask = "0b0111";
          canDrop = true;
       }
-      if (bodyA.label === "Circle Body") {
-         canDrop = true;
-         console.log("ball");
+      if (bodyA.label === "Circle Body2") {
          if (bodyA.circleRadius == bodyB.circleRadius) {
-            console.log("drop");
-            score += bodyA.circleRadius;
-            scoreSpan.innerText = `スコア : ${score}`;
-            if (bodyA.circleRadius != 80) {
+            score += points[ballsize.indexOf(bodyA.circleRadius, 0)];
+            scoreSpan.innerText = `${score}`;
+            if (bodyA.circleRadius < 240) {
                let nextsize = ballsize.indexOf(bodyA.circleRadius, 0) + 1;
-               console.log(ballsize[nextsize]);
                let size = ballsize[nextsize];
-               let color = ballcolor[nextsize];
                const newX = (bodyA.position.x + bodyB.position.x) / 2;
-               const newY = (bodyA.position.y + bodyB.position.y) / 2;
+               const newY = ((bodyA.position.y + bodyB.position.y) / 2) * 0.9985;
                ball = Bodies.circle(newX, newY, size, {
-                  render: { fillStyle: color },
-                  restitution: 0,
-                  friction: 0.2,
+                  render: {
+                     sprite: {
+                        texture: `./BallTexs/${nextsize}.png`,
+                        xScale: size / 300,
+                        yScale: size / 300
+                     }
+                  },
+                  restitution: 0.17,
+                  friction: 0.3,
                   angle: Math.random(0, 360),
+                  label: "Circle Body2",
+                  collisionFilter: { category: 0b0010 , mask: 0b0111},
                });
                World.remove(engine.world, [bodyA, bodyB]);
                World.add(engine.world, ball);
@@ -107,88 +326,124 @@ Events.on(engine, "collisionStart", function (event) {
 });
 
 let ball;
-let dropper;
+let nextangle = Math.floor(Math.random() * 360);
 let nextBallSize = getNextBallSize();
+let nextBallSizecache = getNextBallSize();
 let cachesize = ballsize[nextBallSize];
-previewSizeSpan.innerText = `次のボール : ${ballsize[nextBallSize]}`;
+nextball.src = `./BallTexs/${nextBallSizecache}.png`;
+let isGameover = false;
 
-let color;
-let size;
-color = ballcolor[nextBallSize];
-size = ballsize[nextBallSize];
+let size = ballsize[nextBallSize];
 
-dropper = Bodies.circle(WIDTH/2, 75, size, {
-   render: { fillStyle: color},
+const dropper = Bodies.circle(WIDTH / 2, HEIGHT / 5.5, size, {
+   render: {
+      sprite: {
+         texture: `./BallTexs/${nextBallSize}.png`,
+         xScale: size / 300,
+         yScale: size / 300
+      }
+   },
    restitution: 0,
    friction: 0.2,
-   angle: Math.random(0, 360),
+   angle: nextangle,
    isStatic: true,
-   collisionFilter: {category: 0x0000},
+   collisionFilter: { category: 0b0100 },
    label: "dropper",
 });
 
 World.add(engine.world, dropper);
 
+let clickint = 0;
+let mode = 0;
+
 function handleCanvasClick() {
-   console.log(canDrop);
-   if (canDrop) {
-   Matter.Body.setVelocity(dropper, {x:0, y:0});
-   let x = dropper.position.x;
-      ball = Bodies.circle(x, 75, size, {
-         render: { fillStyle: color },
-         restitution: 0,
-         friction: 0.2,
-         angle: Math.random(0, 360),
-         collisionFilter: {category: 0x0004},
+   if (isGameover){
+      return
+   }
+   else {
+      clickint++;
+      if (clickint == 4){
+         mode = Math.floor(Math.random() * 4);
+         if (mode == 0){
+            engine.gravity.x = -0.85;
+            engine.gravity.y = 0.5;
+            ground.label = "ground";
+            left.label = "ground";
+            right.label = "wall";
+         }
+         else if (mode == 1){
+            engine.gravity.x = 0.85;
+            engine.gravity.y = 0.5;
+            ground.label = "ground";
+            left.label = "wall";
+            right.label = "ground";
+         }
+         else if (mode == (2 || 3)) {
+            engine.gravity.x = 0;
+            engine.gravity.y = 1;
+            ground.label = "ground";
+            left.label = "wall";
+            right.label = "wall";
+         }
+         clickint = 0;
+      }
+      let dropsize = ballsize[nextBallSize];
+      Matter.Body.setVelocity(dropper, { x: 0, y: 0 });
+      let x = dropper.position.x;
+      ball = Bodies.circle(x, HEIGHT / 5.3, dropsize, {
+         render: {
+            sprite: {
+               texture: `./BallTexs/${nextBallSize}.png`,
+               xScale: dropsize / 300,
+               yScale: dropsize / 300
+            }
+         },
+         restitution: 0.17,
+         friction: 0.3,
+         angle: nextangle,
+         collisionFilter: { category: 0b0010 , mask: 0b0011},
       });
-
+      nextangle = Math.floor(Math.random() * 360);
+      nextBallSize = nextBallSizecache;
+      nextBallSizecache = getNextBallSize();
+      dropsize = ballsize[nextBallSize];
       cachesize = ballsize[nextBallSize];
-      nextBallSize = getNextBallSize();
-      color = ballcolor[nextBallSize];
-      size = ballsize[nextBallSize];
-      console.log(`color:${color}, size:${size}`)
-      Matter.Body.scale(dropper, ballsize[nextBallSize] / cachesize, ballsize[nextBallSize] / cachesize);
-      console.log(`Dropper size ${dropper.scale}`);
-      dropper.render.fillStyle = color;
       World.add(engine.world, ball);
-      
-      previewSizeSpan.innerText = `次のボール : ${ballsize[nextBallSize]}`;
-
-      canDrop = false; // 新しいボールが生成されたら一旦落下を無効にする
+      nextball.src = `./BallTexs/${nextBallSizecache}.png`;
+      dropper.render.sprite.texture = `./BallTexs/${nextBallSize}.png`;
+      dropper.render.sprite.xScale = cachesize / 300,
+      dropper.render.sprite.yScale = cachesize / 300;
+      dropper.angle = nextangle;
    }
 }
 
 function getNextBallSize() {
-   return Math.floor(Math.random() * 3);
+   return Math.floor(Math.random() * 4);
 }
 
-canvas.addEventListener("click", function (event) {
-   handleCanvasClick();
+window.addEventListener("click", function (event) {
+   if (canDrop == true) {
+      canDrop = false;
+      handleCanvasClick();
+   }
 });
 
-document.addEventListener('keypress', keypress_ivent);
-document.addEventListener('keyup', keyup_ivent);
-
-function keypress_ivent(e) {
-	document.getElementById('output').innerHTML = e.key;
-	return false; 
-}
-
-function keyup_ivent(e) {
-	document.getElementById('output').innerHTML = '';
-	return false; 
-}
-
-window.onload=function(){
-   //マウス移動時のイベントをBODYタグに登録する
-   window.addEventListener("mousemove", function(e){
-  
-     //座標を取得する
-     var mX = e.offsetX;  //X座標
-     var mY = e.clientY;  //Y座標
-  
-     //座標を表示する
-     scoreSpan.innerHTML = `X:${mX}, Y:${mY}, Ball:${dropper.position.x}`;
-     dropper.position.x = mX;
+window.onload = function () {
+   window.addEventListener("mousemove", function (e) {
+      var ballX = e.offsetX;
+      dropper.position.x = ballX - ballsize[nextBallSize];
+      if (dropper.position.x < ballsize[nextBallSize] + WIDTH / 48){
+         dropper.position.x = ballsize[nextBallSize] + WIDTH / 48;
+      }
+      if (dropper.position.x > WIDTH - ballsize[nextBallSize] - WIDTH / 48){
+         dropper.position.x = WIDTH - ballsize[nextBallSize] - WIDTH / 48;
+      }
+      Matter.Body.setPosition(guide, {x:dropper.position.x, y:HEIGHT / 2 + HEIGHT / 11.75, z:0}, [updateVelocity=false])
    });
- }
+};
+
+function gameover(){
+   gameoverdiv.style = "display: block;";
+   isGameover = true;
+   console.log("gameover2");
+}
