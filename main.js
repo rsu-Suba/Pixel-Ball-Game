@@ -2,12 +2,14 @@ const canvas = document.getElementById("maincanvas");
 const windowwidth = window.innerWidth;
 const WIDTH = windowwidth * 0.85;
 const HEIGHT = (WIDTH / 16) * 27;
+const consoletext = document.getElementById("console");
 let deviceType = 0;
 
 for (let i = 0; i < 11; i++){
    let path = `./BallTexs/${i}.png`
    document.getElementById("preloadimg").src = path;
 }
+
 document.getElementById("preloadimg").style = "display: none;";
 
 const Engine = Matter.Engine;
@@ -429,24 +431,36 @@ function getNextBallSize() {
    return Math.floor(Math.random() * 4);
 }
 
-window.onload = function () {
-   window.addEventListener("mousemove", function (e) {
-      move(e);
-   });
-   window.addEventListener("touchmove", function (e) {
-      move(e)
-   });
-   window.addEventListener("click", function (e) {
-      drop();
-   });
-   window.addEventListener("touchend", function (e) {
-      drop();
-   });
-};
+let isTouchnow = 0;
 
-function move(e){
-   var ballX = e.offsetX;
-   dropper.position.x = ballX - ballsize[nextBallSize];
+window.addEventListener("mousemove", function (e) {
+   let pos = e.clientX;
+   move(pos);
+});
+window.addEventListener("touchmove", function (e) {
+   isTouchnow = 1;
+   let pos = e.changedTouches[0].clientX;
+   move(pos)
+});
+window.addEventListener("click", function (e) {
+   drop();
+});
+window.addEventListener("touchend", function (e) {
+   if (isTouchnow === 1){
+      drop();
+   }
+   isTouchnow = 0;
+});
+window.addEventListener("touchtart", function (e){
+   if (isTouchnow === 0){
+      drop();
+   }
+});
+
+
+function move(pos){
+   pos -= (windowwidth - WIDTH) / 2;
+   dropper.position.x = pos;
    if (dropper.position.x < ballsize[nextBallSize] + WIDTH / 48){
       dropper.position.x = ballsize[nextBallSize] + WIDTH / 48;
    }
@@ -467,4 +481,8 @@ function gameover(){
    gameoverdiv.style = "display: block;";
    isGameover = true;
    console.log("gameover2");
+}
+
+function windowResized() {
+	resizeCanvas(windowWidth, windowHeight);
 }
