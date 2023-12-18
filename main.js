@@ -493,9 +493,8 @@ window.addEventListener("deviceorientation", function (e) {
    let alpha = e.alpha;
    let beta = e.beta;
    let gamma = e.gamma;
-   x   = e.accelerationIncludingGravity.x,
  
-   consoletext.innerHTML = `${alpha}, ${beta}, ${gamma}, ${x}`;
-   console.log = `${alpha}, ${beta}, ${gamma}, ${x}`;
+   consoletext.innerHTML = `${alpha}, ${beta}, ${gamma}`;
+   console.log = `${alpha}, ${beta}, ${gamma}`;
  
  }, false);
