@@ -476,7 +476,7 @@ let isTouchnow = 0;
       }
       isTouchnow = 0;
    });
-   window.addEventListener("touchtart", function (e){
+   window.addEventListener("touchstart", function (e){
       if (isTouchnow === 0){
          drop();
       }
@@ -526,7 +526,7 @@ const requestDeviceOrientationPermission = () => {
                let gamma = Math.floor(e.gamma);
             
                datatext.innerHTML = `${alpha}, ${beta}, ${gamma}`;
-               console.log = `${alpha}, ${beta}, ${gamma}`;
+               console.log(`${alpha}, ${beta}, ${gamma}`);
             }, false);
           } else {
             // 許可を得られなかった場合の処理
@@ -546,7 +546,7 @@ const requestDeviceOrientationPermission = () => {
    let gamma = Math.floor(e.gamma);
 
    datatext.innerHTML = `${alpha}, ${beta}, ${gamma}`;
-   console.log = `${alpha}, ${beta}, ${gamma}`;
+   console.log(`${alpha}, ${beta}, ${gamma}`);
 }, false);
 
 const startButton = document.getElementById("start-button");
