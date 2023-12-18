@@ -487,14 +487,37 @@ function windowResized() {
 	resizeCanvas(windowWidth, windowHeight);
 }
 
-// 加速度センサーイベント処理
-window.addEventListener("deviceorientation", function (e) {
-   // alpha, beta, gammaの値を取得
-   let alpha = e.alpha;
-   let beta = e.beta;
-   let gamma = e.gamma;
+const requestDeviceOrientationPermission = () => {
+   consoletext.innerHTML = `❓`;
+   if (
+     DeviceOrientationEvent &&
+     typeof DeviceOrientationEvent.requestPermission === 'function'
+   ) {
+     // iOS 13+ の Safari
+     // 許可を取得
+     DeviceOrientationEvent.requestPermission()
+     .then(permissionState => {
+       if (permissionState === 'granted') {
+         // 許可を得られた場合、deviceorientationをイベントリスナーに追加
+         window.addEventListener('deviceorientation', e => {
+           // deviceorientationのイベント処理
+            let alpha = Math.floor(e.alpha);
+            let beta = Math.floor(e.beta);
+            let gamma = Math.floor(e.gamma);
+
+            consoletext.innerHTML = `${alpha}, ${beta}, ${gamma}`;
+            console.log = `${alpha}, ${beta}, ${gamma}`;
+         }, false)
+       } else {
+         // 許可を得られなかった場合の処理
+       }
+     })
+     .catch(consoletext.innerHTML = `😭`) // https通信でない場合などで許可を取得できなかった場合
+   } else {
+     // 上記以外のブラウザ
+   }
+ }
  
-   consoletext.innerHTML = `${alpha}, ${beta}, ${gamma}`;
-   console.log = `${alpha}, ${beta}, ${gamma}`;
- 
- }, false);
+ // ボタンクリックでrequestDeviceOrientationPermission実行
+ const startButton = document.getElementById("start-button");
+ startButton.addEventListener('click', requestDeviceOrientationPermission, false)
