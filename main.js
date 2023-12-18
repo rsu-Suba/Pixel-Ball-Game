@@ -286,24 +286,47 @@ Events.on(engine, "collisionStart", function (event) {
          if (bodyB.label === "Circle Body"){
             bodyB.label = "Circle Body2";
             bodyB.collisionFilter.mask = "0b0011";
+            clickint++;
+            if (clickint == 2){
+               mode = Math.floor(Math.random() * 4);
+               if (mode == 0){
+                  engine.gravity.x = -0.85;
+                  engine.gravity.y = 0.5;
+                  ground.label = "wall";
+                  left.label = "ground";
+                  right.label = "wall";
+               }
+               else if (mode == 1){
+                  engine.gravity.x = 0.85;
+                  engine.gravity.y = 0.5;
+                  ground.label = "wall";
+                  left.label = "wall";
+                  right.label = "ground";
+               }
+               else if (mode == (2 || 3)) {
+                  engine.gravity.x = 0;
+                  engine.gravity.y = 1;
+                  ground.label = "ground";
+                  left.label = "wall";
+                  right.label = "wall";
+               }
+               clickint = 0;
+            }
             canDrop = true;
          }
          else if (bodyB.label === "Circle Body3"){
             bodyB.label = "Circle Body4";
             bodyB.collisionFilter.mask = "0b0111";
-            canDrop = true;
          }
       }
       else if (bodyA.label === "Circle Body2" || bodyA.label === "Circle Body3" || bodyA.label === "Circle Body4"){
          if (bodyB.label === "Circle Body"){
             bodyB.label = "Circle Body3";
             bodyB.collisionFilter.mask = "0b0111";
-            canDrop = true;
          }
          else if (bodyB.label === "Circle Body2"){
             bodyB.label = "Circle Body4";
             bodyB.collisionFilter.mask = "0b0111";
-            canDrop = true;
          }
          if (bodyA.circleRadius == bodyB.circleRadius) {
             score += points[ballsize.indexOf(bodyA.circleRadius, 0)];
@@ -371,32 +394,6 @@ function handleCanvasClick() {
       return
    }
    else {
-      clickint++;
-      if (clickint == 4){
-         mode = Math.floor(Math.random() * 4);
-         if (mode == 0){
-            engine.gravity.x = -0.85;
-            engine.gravity.y = 0.5;
-            ground.label = "wall";
-            left.label = "ground";
-            right.label = "wall";
-         }
-         else if (mode == 1){
-            engine.gravity.x = 0.85;
-            engine.gravity.y = 0.5;
-            ground.label = "wall";
-            left.label = "wall";
-            right.label = "ground";
-         }
-         else if (mode == (2 || 3)) {
-            engine.gravity.x = 0;
-            engine.gravity.y = 1;
-            ground.label = "ground";
-            left.label = "wall";
-            right.label = "wall";
-         }
-         clickint = 0;
-      }
       let dropsize = ballsize[nextBallSize];
       Matter.Body.setVelocity(dropper, { x: 0, y: 0 });
       let x = dropper.position.x;

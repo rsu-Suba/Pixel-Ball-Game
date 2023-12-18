@@ -64,7 +64,8 @@ body{
 }
 
 #start-button {
-  position: fixed;
+  position: relative;
+  height: 4vh;
   z-index: 999;
 }
 
