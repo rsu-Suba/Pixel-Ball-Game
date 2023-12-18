@@ -323,6 +323,33 @@ Events.on(engine, "collisionStart", function (event) {
          if (bodyB.label === "Circle Body"){
             bodyB.label = "Circle Body3";
             bodyB.collisionFilter.mask = "0b0111";
+            clickint++;
+            if (clickint == 2){
+               mode = Math.floor(Math.random() * 4);
+               if (mode == 0){
+                  engine.gravity.x = -0.85;
+                  engine.gravity.y = 0.5;
+                  ground.label = "wall";
+                  left.label = "ground";
+                  right.label = "wall";
+               }
+               else if (mode == 1){
+                  engine.gravity.x = 0.85;
+                  engine.gravity.y = 0.5;
+                  ground.label = "wall";
+                  left.label = "wall";
+                  right.label = "ground";
+               }
+               else if (mode == (2 || 3)) {
+                  engine.gravity.x = 0;
+                  engine.gravity.y = 1;
+                  ground.label = "ground";
+                  left.label = "wall";
+                  right.label = "wall";
+               }
+               clickint = 0;
+            }
+            canDrop = true;
          }
          else if (bodyB.label === "Circle Body2"){
             bodyB.label = "Circle Body4";
@@ -430,29 +457,30 @@ function getNextBallSize() {
 
 let isTouchnow = 0;
 
-window.addEventListener("mousemove", function (e) {
-   let pos = e.clientX;
-   move(pos);
-});
-window.addEventListener("touchmove", function (e) {
-   isTouchnow = 1;
-   let pos = e.changedTouches[0].clientX;
-   move(pos)
-});
-window.addEventListener("click", function (e) {
-   drop();
-});
-window.addEventListener("touchend", function (e) {
-   if (isTouchnow === 1){
+
+   window.addEventListener("mousemove", function (e) {
+      let pos = e.clientX;
+      move(pos);
+   });
+   window.addEventListener("touchmove", function (e) {
+      isTouchnow = 1;
+      let pos = e.changedTouches[0].clientX;
+      move(pos)
+   });
+   window.addEventListener("click", function (e) {
       drop();
-   }
-   isTouchnow = 0;
-});
-window.addEventListener("touchtart", function (e){
-   if (isTouchnow === 0){
-      drop();
-   }
-});
+   });
+   window.addEventListener("touchend", function (e) {
+      if (isTouchnow === 1){
+         drop();
+      }
+      isTouchnow = 0;
+   });
+   window.addEventListener("touchtart", function (e){
+      if (isTouchnow === 0){
+         drop();
+      }
+   });
 
 
 function move(pos){
@@ -493,6 +521,7 @@ const requestDeviceOrientationPermission = () => {
         .then(permissionState => {
           if (permissionState === 'granted') {
             orient();
+            //control();
           } else {
             // 許可を得られなかった場合の処理
             consoletext.innerHTML = `🥺`;
@@ -504,6 +533,7 @@ const requestDeviceOrientationPermission = () => {
    }
    else {
       orient();
+      //control();
    }
  };
  
