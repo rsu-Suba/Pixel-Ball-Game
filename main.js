@@ -520,8 +520,14 @@ const requestDeviceOrientationPermission = () => {
         DeviceOrientationEvent.requestPermission()
         .then(permissionState => {
           if (permissionState === 'granted') {
-            orient();
-            //control();
+            window.addEventListener('deviceorientation', e => {
+               let alpha = Math.floor(e.alpha);
+               let beta = Math.floor(e.beta);
+               let gamma = Math.floor(e.gamma);
+            
+               consoletext.innerHTML = `${alpha}, ${beta}, ${gamma}`;
+               console.log = `${alpha}, ${beta}, ${gamma}`;
+            }, false);
           } else {
             // 許可を得られなかった場合の処理
             consoletext.innerHTML = `🥺`;
@@ -531,22 +537,17 @@ const requestDeviceOrientationPermission = () => {
       }
       else {}
    }
-   else {
-      orient();
-      //control();
-   }
  };
  
-function orient(){
-   window.addEventListener('deviceorientation', e => {
-      let alpha = Math.floor(e.alpha);
-      let beta = Math.floor(e.beta);
-      let gamma = Math.floor(e.gamma);
 
-      consoletext.innerHTML = `${alpha}, ${beta}, ${gamma}`;
-      console.log = `${alpha}, ${beta}, ${gamma}`;
-   }, false)
-}
+ window.addEventListener('deviceorientation', e => {
+   let alpha = Math.floor(e.alpha);
+   let beta = Math.floor(e.beta);
+   let gamma = Math.floor(e.gamma);
+
+   consoletext.innerHTML = `${alpha}, ${beta}, ${gamma}`;
+   console.log = `${alpha}, ${beta}, ${gamma}`;
+}, false);
 
 const startButton = document.getElementById("start-button");
 startButton.addEventListener('click', requestDeviceOrientationPermission, false)
