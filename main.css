@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Carter+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Carter+One&family=Inter:wght@400&display=swap');
 
 body{
     background-color: #f4eebc;
@@ -6,7 +6,7 @@ body{
   }
 
   text {
-    font-family: 'Pixelify Sans';
+    font-family: 'Inter';
   }
 
   .background-solid {
@@ -63,6 +63,11 @@ body{
     display: block;
 }
 
+#start-button {
+  position: fixed;
+  z-index: 999;
+}
+
 @media screen and (orientation:portrait){
   #maincanvas{
     bottom: 7vw;
@@ -86,6 +91,7 @@ body{
     position: relative;
     height: 100%;
     aspect-ratio: 1;
+    z-index: -1;
   }
 
   .nextball{
