@@ -485,36 +485,52 @@ function windowResized() {
 }
 
 const requestDeviceOrientationPermission = () => {
-   consoletext.innerHTML = `❓`;
-   if (
-     DeviceOrientationEvent &&
-     typeof DeviceOrientationEvent.requestPermission === 'function'
-   ) {
-     // iOS 13+ の Safari
-     // 許可を取得
-     DeviceOrientationEvent.requestPermission()
-     .then(permissionState => {
-       if (permissionState === 'granted') {
-         // 許可を得られた場合、deviceorientationをイベントリスナーに追加
-         window.addEventListener('deviceorientation', e => {
-           // deviceorientationのイベント処理
-            let alpha = Math.floor(e.alpha);
-            let beta = Math.floor(e.beta);
-            let gamma = Math.floor(e.gamma);
-
-            consoletext.innerHTML = `${alpha}, ${beta}, ${gamma}`;
-            console.log = `${alpha}, ${beta}, ${gamma}`;
-         }, false)
-       } else {
-         // 許可を得られなかった場合の処理
-       }
-     })
-     .catch(consoletext.innerHTML = `😭`) // https通信でない場合などで許可を取得できなかった場合
-   } else {
-     // 上記以外のブラウザ
+   let os = osdetect();
+   if (os === 'iphone'){
+      consoletext.innerHTML = `❓`;
+      if (DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission === 'function') {
+        DeviceOrientationEvent.requestPermission()
+        .then(permissionState => {
+          if (permissionState === 'granted') {
+            orient();
+          } else {
+            // 許可を得られなかった場合の処理
+            consoletext.innerHTML = `🥺`;
+          }
+        })
+        .catch(consoletext.innerHTML = `😭`)
+      }
+      else {}
    }
- }
+   else {
+      orient();
+   }
+ };
  
- // ボタンクリックでrequestDeviceOrientationPermission実行
- const startButton = document.getElementById("start-button");
- startButton.addEventListener('click', requestDeviceOrientationPermission, false)
+function orient(){
+   window.addEventListener('deviceorientation', e => {
+      let alpha = Math.floor(e.alpha);
+      let beta = Math.floor(e.beta);
+      let gamma = Math.floor(e.gamma);
+
+      consoletext.innerHTML = `${alpha}, ${beta}, ${gamma}`;
+      console.log = `${alpha}, ${beta}, ${gamma}`;
+   }, false)
+}
+
+const startButton = document.getElementById("start-button");
+startButton.addEventListener('click', requestDeviceOrientationPermission, false)
+
+function osdetect() {
+   let os;
+   if (navigator.userAgent.indexOf("iPhone") > 0 || navigator.userAgent.indexOf("iPad") > 0 || navigator.userAgent.indexOf("iPod") > 0) {
+      os = "iphone";
+   } 
+   else if (navigator.userAgent.indexOf("Android") > 0) {
+      os = "android";
+   }
+   else {
+      os = "pc";
+   }
+   return os;
+}
