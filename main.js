@@ -486,3 +486,16 @@ function gameover(){
 function windowResized() {
 	resizeCanvas(windowWidth, windowHeight);
 }
+
+// 加速度センサーイベント処理
+window.addEventListener("deviceorientation", function (e) {
+   // alpha, beta, gammaの値を取得
+   let alpha = e.alpha;
+   let beta = e.beta;
+   let gamma = e.gamma;
+   x   = e.accelerationIncludingGravity.x,
+ 
+   consoletext.innerHTML = `${alpha}, ${beta}, ${gamma}, ${x}`;
+   console.log = `${alpha}, ${beta}, ${gamma}, ${x}`;
+ 
+ }, false);
