@@ -2,7 +2,7 @@ const canvas = document.getElementById("maincanvas");
 const windowwidth = window.innerWidth;
 const WIDTH = windowwidth * 0.85;
 const HEIGHT = (WIDTH / 16) * 27;
-const consoletext = document.getElementById("console");
+const datatext = document.getElementById("datatext");
 let deviceType = 0;
 
 for (let i = 0; i < 11; i++){
@@ -515,7 +515,7 @@ function windowResized() {
 const requestDeviceOrientationPermission = () => {
    let os = osdetect();
    if (os === 'iphone'){
-      consoletext.innerHTML = `❓`;
+      datatext.innerHTML = `❓`;
       if (DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission === 'function') {
         DeviceOrientationEvent.requestPermission()
         .then(permissionState => {
@@ -525,7 +525,7 @@ const requestDeviceOrientationPermission = () => {
                let beta = Math.floor(e.beta);
                let gamma = Math.floor(e.gamma);
             
-               consoletext.innerHTML = `${alpha}, ${beta}, ${gamma}`;
+               datatext.innerHTML = `${alpha}, ${beta}, ${gamma}`;
                console.log = `${alpha}, ${beta}, ${gamma}`;
             }, false);
           } else {
@@ -545,7 +545,7 @@ const requestDeviceOrientationPermission = () => {
    let beta = Math.floor(e.beta);
    let gamma = Math.floor(e.gamma);
 
-   consoletext.innerHTML = `${alpha}, ${beta}, ${gamma}`;
+   datatext.innerHTML = `${alpha}, ${beta}, ${gamma}`;
    console.log = `${alpha}, ${beta}, ${gamma}`;
 }, false);
 
