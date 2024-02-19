@@ -550,7 +550,7 @@ const requestDeviceOrientationPermission = () => {
    console.log(`${alpha}, ${beta}, ${gamma}`);
    if (gravityMode == 1){
       engine.gravity.x = (gamma / 60);
-      engine.gravity.y = 1;
+      engine.gravity.y = (beta / 60);
    }
 }, false);
 
