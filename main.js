@@ -265,27 +265,18 @@ World.add(engine.world, maincontainer);
 Engine.run(engine);
 Render.run(render);
 
-
 Events.on(engine, "collisionStart", function (event) {
    let pairs = event.pairs;
    for (const pair of pairs) {
       const { bodyA, bodyB } = pair;
-      console.log(`You: ${bodyA.label}`);
-      console.log(`Me: ${bodyB.label}`);
       //bodyA→相手
       //bodyB→自分
-      if (bodyA.label === "topground" && (bodyB.label === "Circle Body4" || bodyB.label === "Circle Body3")){
-         console.log("gameover1");
+      
+      if (bodyA.label === "topground" && bodyB.label === "Circle Body3" || bodyB.label === "Circle Body4"){
          gameover();
       }
-      //Circle Body = Nothing
-      //Circle Body2 = ground
-      //Circle Body3 = ball
-      //Circle Body4 = ground & ball
-      if (bodyA.label === "ground") {
-         if (bodyB.label === "Circle Body"){
-            bodyB.label = "Circle Body2";
-            bodyB.collisionFilter.mask = "0b0011";
+      if (bodyA.label === "ground"){
+         if (bodyB.label === "Circle Body" || bodyB.label === "Circle Body5"){
             clickint++;
             if (clickint == 2){
                mode = Math.floor(Math.random() * 4);
@@ -303,7 +294,7 @@ Events.on(engine, "collisionStart", function (event) {
                   left.label = "wall";
                   right.label = "ground";
                }
-               else if (mode == (2 || 3)) {
+               else if (mode == 2 || mode == 3){
                   engine.gravity.x = 0;
                   engine.gravity.y = 1;
                   ground.label = "ground";
@@ -312,53 +303,58 @@ Events.on(engine, "collisionStart", function (event) {
                }
                clickint = 0;
             }
-            canDrop = true;
+            if (bodyB.label === "Circle Body") {
+               canDrop = true;
+            }
+            bodyB.label = "Circle Body2";
          }
-         else if (bodyB.label === "Circle Body3"){
+         else if (bodyB.label === "Circle Body3") {
             bodyB.label = "Circle Body4";
-            bodyB.collisionFilter.mask = "0b0111";
          }
       }
-      else if (bodyA.label === "Circle Body2" || bodyA.label === "Circle Body3" || bodyA.label === "Circle Body4"){
-         if (bodyB.label === "Circle Body"){
-            bodyB.label = "Circle Body3";
-            bodyB.collisionFilter.mask = "0b0111";
-            clickint++;
-            if (clickint == 2){
-               mode = Math.floor(Math.random() * 4);
-               if (mode == 0){
-                  engine.gravity.x = -0.85;
-                  engine.gravity.y = 0.5;
-                  ground.label = "wall";
-                  left.label = "ground";
-                  right.label = "wall";
+      else if (bodyA.label === "Circle Body2" || bodyA.label === "Circle Body3" || bodyA.label === "Circle Body4" || bodyA.label === "Circle Body5") {
+         if (bodyB.label === "Circle Body" || bodyB.label === "Circle Body5") {
+            if (gravityMode == 0){
+               clickint++;
+               if (clickint == 2){
+                  mode = Math.floor(Math.random() * 4);
+                  if (mode == 0){
+                     engine.gravity.x = -0.85;
+                     engine.gravity.y = 0.5;
+                     ground.label = "wall";
+                     left.label = "ground";
+                     right.label = "wall";
+                  }
+                  else if (mode == 1){
+                     engine.gravity.x = 0.85;
+                     engine.gravity.y = 0.5;
+                     ground.label = "wall";
+                     left.label = "wall";
+                     right.label = "ground";
+                  }
+                  else if (mode == 2 || mode == 3){
+                     engine.gravity.x = 0;
+                     engine.gravity.y = 1;
+                     ground.label = "ground";
+                     left.label = "wall";
+                     right.label = "wall";
+                  }
+                  clickint = 0;
                }
-               else if (mode == 1){
-                  engine.gravity.x = 0.85;
-                  engine.gravity.y = 0.5;
-                  ground.label = "wall";
-                  left.label = "wall";
-                  right.label = "ground";
-               }
-               else if (mode == (2 || 3)) {
-                  engine.gravity.x = 0;
-                  engine.gravity.y = 1;
-                  ground.label = "ground";
-                  left.label = "wall";
-                  right.label = "wall";
-               }
-               clickint = 0;
             }
-            canDrop = true;
+            if (bodyB.label === "Circle Body") {
+               canDrop = true;
+            }
+            bodyB.label = "Circle Body3";
          }
-         else if (bodyB.label === "Circle Body2"){
+         else if (bodyB.label === "Circle Body2") {
             bodyB.label = "Circle Body4";
-            bodyB.collisionFilter.mask = "0b0111";
          }
          if (bodyA.circleRadius == bodyB.circleRadius) {
+            console.log("same");
             score += points[ballsize.indexOf(bodyA.circleRadius, 0)];
             scoreSpan.innerText = `${score}`;
-            if (bodyA.circleRadius < Math.floor(WIDTH / 550 * 148)) {
+            if (bodyA.circleRadius < ballsize[10]) {
                let nextsize = ballsize.indexOf(bodyA.circleRadius, 0) + 1;
                let size = ballsize[nextsize];
                const newX = (bodyA.position.x + bodyB.position.x) / 2;
@@ -373,9 +369,9 @@ Events.on(engine, "collisionStart", function (event) {
                   },
                   restitution: 0.17,
                   friction: 0.3,
-                  angle: Math.floor(Math.random() * 360),
-                  label: "Circle Body",
-                  collisionFilter: { category: 0b0010 , mask: 0b0111},
+                  angle: Math.random(0, 360),
+                  label: "Circle Body5",
+                  collisionFilter: { category: 0b0010 , mask: 0b0011},
                });
                World.remove(engine.world, [bodyA, bodyB]);
                World.add(engine.world, ball);
@@ -391,7 +387,9 @@ let nextBallSize = getNextBallSize();
 let nextBallSizecache = getNextBallSize();
 let cachesize = ballsize[nextBallSize];
 nextball.src = `./BallTexs/${nextBallSizecache}.png`;
+let isGamestart = false;
 let isGameover = false;
+let gravityMode = 0;
 
 let size = ballsize[nextBallSize];
 
@@ -416,6 +414,8 @@ World.add(engine.world, dropper);
 let clickint = 0;
 let mode = 0;
 
+let ballnum = 0;
+
 function handleCanvasClick() {
    if (isGameover){
       return
@@ -435,8 +435,11 @@ function handleCanvasClick() {
          restitution: 0.17,
          friction: 0.3,
          angle: nextangle,
+         label: "Circle Body",
          collisionFilter: { category: 0b0010 , mask: 0b0011},
       });
+      ballnum++;
+      console.log(ballnum);
       nextangle = Math.floor(Math.random() * 360);
       nextBallSize = nextBallSizecache;
       nextBallSizecache = getNextBallSize();
@@ -491,7 +494,7 @@ function move(pos){
 }
 
 function drop(){
-   if (canDrop == true) {
+   if (canDrop == true && isGamestart == true) {
       canDrop = false;
       handleCanvasClick();
    }
@@ -500,6 +503,7 @@ function drop(){
 function gameover(){
    gameoverdiv.style = "display: block;";
    isGameover = true;
+   isGamestart = false;
    console.log("gameover2");
 }
 
@@ -544,6 +548,10 @@ const requestDeviceOrientationPermission = () => {
 
    datatext.innerHTML = `${alpha}, ${beta}, ${gamma}`;
    console.log(`${alpha}, ${beta}, ${gamma}`);
+   if (gravityMode == 1){
+      engine.gravity.x = (1 / gamma);
+      engine.gravity.y = 1;
+   }
 }, false);
 
 const startButton = document.getElementById("start-button");
@@ -562,4 +570,23 @@ function osdetect() {
       startButton.style = "display: none;"
    }
    console.log(os);
+}
+
+
+function start(){
+   target = document.getElementById("top-page");
+   target.className = "play";
+   gravityMode = 0;
+   isGamestart = true;
+}
+
+
+function rot(){
+   target = document.getElementById("top-page");
+   target.className = "play";
+   ground.label = "ground";
+   left.label = "wall";
+   right.label = "wall";
+   gravityMode = 1;
+   isGamestart = true;
 }
