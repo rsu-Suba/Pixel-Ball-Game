@@ -572,7 +572,7 @@ window.addEventListener("devicemotion", function devicemotionHandler(event) {
    let ya;
    if (os == "android") {
       xg = event.accelerationIncludingGravity.x / 25;
-      yg = event.accelerationIncludingGravity.y / 25;
+      yg = -event.accelerationIncludingGravity.y / 25;
       xa = event.acceleration.x / 1.6;
       ya = event.acceleration.y / 1.6;
    }
