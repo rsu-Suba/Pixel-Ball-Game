@@ -82,7 +82,7 @@ const ground = Bodies.rectangle(WIDTH / 2, HEIGHT, WIDTH, HEIGHT / 35, {
 });
 const topground = Bodies.rectangle(WIDTH / 2, HEIGHT / 3.5, WIDTH, 5, {
    render: {
-      fillStyle: "transparent",
+      fillStyle: "#000",
    },
    isStatic: true,
    collisionFilter: { category: 0b0100 },
@@ -276,9 +276,15 @@ Events.on(engine, "collisionStart", function (event) {
       //Circle Body3 = ball
       //Circle Body4 = ground & ball
       //Circle Body5 = bornball
-      
-      if (bodyA.label === "topground" && (bodyB.label === "Circle Body3" || bodyB.label === "Circle Body4")){
-         gameover();
+      if (gravityMode == 0){
+         if (bodyA.label === "topground" && (bodyB.label === "Circle Body3" || bodyB.label === "Circle Body4")){
+            gameover();
+         }
+      }
+      else if (gravityMode == 1){
+         if (bodyA.label === "topground" && (bodyB.label === "Circle Body" || bodyB.label === "Circle Body2" || bodyB.label === "Circle Body3" || bodyB.label === "Circle Body4" || bodyB.label === "Circle Body5")){
+            gameover();
+         }
       }
       if (bodyA.label === "ground"){
          if (bodyB.label === "Circle Body" || bodyB.label === "Circle Body5"){
