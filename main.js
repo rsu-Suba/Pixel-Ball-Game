@@ -556,7 +556,6 @@ const requestDeviceOrientationPermission = () => {
    else{ return };
  };
  
-/*
  window.addEventListener('deviceorientation', e => {
    let alpha = Math.floor(e.alpha);
    let beta = Math.floor(e.beta);
@@ -566,7 +565,6 @@ const requestDeviceOrientationPermission = () => {
       engine.gravity.y = (beta / 60);
    }
 }, false);
-*/
 
 var deviceOrientation = screen.orientation;
   window.addEventListener("devicemotion", function devicemotionHandler(event) {
@@ -575,24 +573,20 @@ var deviceOrientation = screen.orientation;
 
     switch (deviceOrientation) {
       case 0:
-        engine.world.gravity.x = xg + event.acceleration.x;
-        engine.world.gravity.y = -yg + event.acceleration.y;
+        engine.world.gravity.x += xg + event.acceleration.x;
+        engine.world.gravity.y += -yg + event.acceleration.y;
         break;
       case 90:
-        engine.world.gravity.x = -yg - event.acceleration.x;
-        engine.world.gravity.y = -xg + event.acceleration.x;
+        engine.world.gravity.x += -yg - event.acceleration.x;
+        engine.world.gravity.y += -xg + event.acceleration.x;
         break;
       case -90:
-        engine.world.gravity.x = yg + event.acceleration.x;
-        engine.world.gravity.y = xg - event.acceleration.x;
+        engine.world.gravity.x += yg + event.acceleration.x;
+        engine.world.gravity.y += xg - event.acceleration.x;
         break;
       case 180:
-        engine.world.gravity.x = -xg - event.acceleration.x;
-        engine.world.gravity.y = yg - event.acceleration.x;
-    }
-    if ( window.navigator.userAgent.indexOf('Android') > 0 ) {
-      engine.world.gravity.x = - engine.world.gravity.x;
-      engine.world.gravity.y = - engine.world.gravity.y;
+        engine.world.gravity.x += -xg - event.acceleration.x;
+        engine.world.gravity.y += yg - event.acceleration.x;
     }
   });
 
@@ -602,6 +596,7 @@ startButton.addEventListener('click', requestDeviceOrientationPermission, false)
 function osdetect() {
    if (navigator.userAgent.indexOf("iPhone") > 0 || navigator.userAgent.indexOf("iPad") > 0 || navigator.userAgent.indexOf("iPod") > 0) {
       os = "iphone";
+      requestDeviceOrientationPermission();
    } 
    else if (navigator.userAgent.indexOf("Android") > 0) {
       os = "android";
