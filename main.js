@@ -2,7 +2,6 @@ const canvas = document.getElementById("maincanvas");
 const windowwidth = window.innerWidth;
 const WIDTH = windowwidth * 0.85;
 const HEIGHT = (WIDTH / 16) * 27;
-const datatext = document.getElementById("datatext");
 let deviceType = 0;
 
 for (let i = 0; i < 11; i++){
@@ -122,7 +121,7 @@ const fakeright = Bodies.rectangle(WIDTH, HEIGHT / 4.6, HEIGHT / 35, HEIGHT / 7.
 });
 const faketop = Bodies.rectangle(WIDTH / 2, HEIGHT / 7.5, WIDTH, 5, {
    render: {
-      fillStyle: "transparent",
+      fillStyle: "#000",
    },
    isStatic: true,
    collisionFilter: { category: 0b0001 },
@@ -539,7 +538,6 @@ let os;
 
 const requestDeviceOrientationPermission = () => {
    if (os === 'iphone'){
-      datatext.innerHTML = `❓`;
       if (DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission === 'function') {
         DeviceOrientationEvent.requestPermission()
         .then(permissionState => {
@@ -548,16 +546,10 @@ const requestDeviceOrientationPermission = () => {
                let alpha = Math.floor(e.alpha);
                let beta = Math.floor(e.beta);
                let gamma = Math.floor(e.gamma);
-            
-               datatext.innerHTML = `${alpha}, ${beta}, ${gamma}`;
-               console.log(`${alpha}, ${beta}, ${gamma}`);
             }, false);
-          } else {
-            // 許可を得られなかった場合の処理
-            consoletext.innerHTML = `🥺`;
-          }
+          } else {}
         })
-        .catch(consoletext.innerHTML = `😭`)
+        .catch()
       }
       else { return }
    }
