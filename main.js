@@ -549,6 +549,7 @@ function windowResized() {
 
 let os;
 
+/*
 window.addEventListener(
    "deviceorientation",
    (e) => {
@@ -561,8 +562,8 @@ window.addEventListener(
    },
    false
 );
+*/
 
-/*
 var deviceOrientation = screen.orientation;
 window.addEventListener("devicemotion", function devicemotionHandler(event) {
    var xg = event.accelerationIncludingGravity.x / 10;
@@ -586,7 +587,7 @@ window.addEventListener("devicemotion", function devicemotionHandler(event) {
          engine.gravity.y = yg - event.acceleration.x;
    }
 });
-*/
+
 
 const startButton = document.getElementById("start-button");
 //startButton.addEventListener('click', requestDeviceOrientationPermission, false)
@@ -647,7 +648,6 @@ function rot() {
             ) {
                if (permissionStateMotion === "granted") {
                   document.getElementById("datatext").innerHTML = `OK`;
-                  document.getElementById("rot-admin").className = "rot-admin";
                   document
                      .getElementById("top-page")
                      .addEventListener("transitionend", () => {
