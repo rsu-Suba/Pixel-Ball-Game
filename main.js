@@ -566,43 +566,45 @@ window.addEventListener(
 
 var deviceOrientation = window.orientation;
 window.addEventListener("devicemotion", function devicemotionHandler(event) {
-   let xg;
-   let yg;
-   let xa;
-   let ya;
-   if (os == "android") {
-      xg = event.accelerationIncludingGravity.x / 25;
-      yg = event.accelerationIncludingGravity.y / 25;
-      xa = event.acceleration.x / 1.6;
-      ya = event.acceleration.y / 1.6;
-   }
-   else {
-      xg = event.accelerationIncludingGravity.x / 2;
-      yg = event.accelerationIncludingGravity.y / 2;
-      xa = event.acceleration.x * 1.5;
-      ya = -event.acceleration.y * 1.5;
-   }
-   document.getElementById("datatext").innerHTML = `${((Math.round(event.acceleration.x * 100)) / 100)}, ${((Math.round(event.acceleration.y * 100)) / 100)}`;
-   switch (deviceOrientation) {
-      case 0:
-         engine.world.gravity.x = xg + xa;
-         engine.world.gravity.y = yg + ya;
-         break;
-      case 90:
-         engine.world.gravity.x = -yg - xa;
-         engine.world.gravity.y = xg - xa;
-         break;
-      case -90:
-         engine.world.gravity.x = yg + xa;
-         engine.world.gravity.y = -xg + xa;
-         break;
-      case 180:
-         engine.world.gravity.x = -xg - xa;
-         engine.world.gravity.y = -yg + xa;
-   }
-   if (os == "android") {
-     engine.world.gravity.x = -engine.world.gravity.x;
-     engine.world.gravity.y = -engine.world.gravity.y;
+   if (gravityMode == 1) {
+      let xg;
+      let yg;
+      let xa;
+      let ya;
+      if (os == "android") {
+         xg = event.accelerationIncludingGravity.x / 25;
+         yg = event.accelerationIncludingGravity.y / 25;
+         xa = event.acceleration.x / 1.6;
+         ya = event.acceleration.y / 1.6;
+      }
+      else {
+         xg = event.accelerationIncludingGravity.x / 2;
+         yg = event.accelerationIncludingGravity.y / 2;
+         xa = event.acceleration.x * 1.5;
+         ya = -event.acceleration.y * 1.5;
+      }
+      document.getElementById("datatext").innerHTML = `${((Math.round(event.acceleration.x * 100)) / 100)}, ${((Math.round(event.acceleration.y * 100)) / 100)}`;
+      switch (deviceOrientation) {
+         case 0:
+            engine.world.gravity.x = xg + xa;
+            engine.world.gravity.y = -yg + ya;
+            break;
+         case 90:
+            engine.world.gravity.x = -yg - xa;
+            engine.world.gravity.y = -xg + xa;
+            break;
+         case -90:
+            engine.world.gravity.x = yg - xa;
+            engine.world.gravity.y = xg + xa;
+            break;
+         case 180:
+            engine.world.gravity.x = -xg - xa;
+            engine.world.gravity.y = yg - xa;
+      }
+      if (os == "android") {
+        engine.world.gravity.x = -engine.world.gravity.x;
+        engine.world.gravity.y = -engine.world.gravity.y;
+      }
    }
 });
 
