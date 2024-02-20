@@ -384,7 +384,7 @@ Events.on(engine, "collisionStart", function (event) {
                   friction: 0.3,
                   angle: Math.random(0, 360),
                   label: "Circle Body5",
-                  collisionFilter: { category: 0b0010 , mask: 0b0011},
+                  collisionFilter: { category: 0b0010 , mask: 0b0111},
                });
                World.remove(engine.world, [bodyA, bodyB]);
                World.add(engine.world, ball);
@@ -558,9 +558,6 @@ const requestDeviceOrientationPermission = () => {
    let alpha = Math.floor(e.alpha);
    let beta = Math.floor(e.beta);
    let gamma = Math.floor(e.gamma);
-
-   datatext.innerHTML = `${alpha}, ${beta}, ${gamma}`;
-   console.log(`${alpha}, ${beta}, ${gamma}`);
    if (gravityMode == 1){
       engine.gravity.x = (gamma / 60);
       engine.gravity.y = (beta / 60);
