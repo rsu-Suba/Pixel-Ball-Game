@@ -565,29 +565,32 @@ window.addEventListener(
 */
 
 var deviceOrientation = window.orientation;
-  window.addEventListener("devicemotion", function devicemotionHandler(event) {
-    var xg = event.accelerationIncludingGravity.x / 60;
-    var yg = event.accelerationIncludingGravity.y / 60;
-    switch (deviceOrientation) {
+window.addEventListener("devicemotion", function devicemotionHandler(event) {
+   let xg = event.accelerationIncludingGravity.x / 60;
+   let yg = event.accelerationIncludingGravity.y / 60;
+   let xa = event.acceleration.x / 60;
+   let ya = event.acceleration.y / 60;
+   document.getElementById(
+      "datatext"
+   ).innerHTML = `${event.acceleration.x}, ${event.acceleration.y}`;
+   switch (deviceOrientation) {
       case 0:
-        engine.world.gravity.x = xg + event.acceleration.x;
-        engine.world.gravity.y = -yg + event.acceleration.y;
-        break;
+         engine.world.gravity.x = xg + xa;
+         engine.world.gravity.y = yg + ya;
+         break;
       case 90:
-        engine.world.gravity.x = -yg - event.acceleration.x;
-        engine.world.gravity.y = -xg + event.acceleration.x;
-        break;
+         engine.world.gravity.x = -yg - xa;
+         engine.world.gravity.y = -xg + xa;
+         break;
       case -90:
-        engine.world.gravity.x = yg + event.acceleration.x;
-        engine.world.gravity.y = xg - event.acceleration.x;
-        break;
+         engine.world.gravity.x = yg + xa;
+         engine.world.gravity.y = xg - xa;
+         break;
       case 180:
-        engine.world.gravity.x = -xg - event.acceleration.x;
-        engine.world.gravity.y = yg - event.acceleration.x;
-    }
-  });
-
-
+         engine.world.gravity.x = -xg - xa;
+         engine.world.gravity.y = yg - xa;
+   }
+});
 
 const startButton = document.getElementById("start-button");
 //startButton.addEventListener('click', requestDeviceOrientationPermission, false)
@@ -653,11 +656,11 @@ function rot() {
                      .addEventListener("transitionend", () => {
                         isGamestart = true;
                      });
-                     document
-                        .getElementById("top-page")
-                        .addEventListener("webkitTransitionend", () => {
-                           isGamestart = true;
-                        });
+                  document
+                     .getElementById("top-page")
+                     .addEventListener("webkitTransitionend", () => {
+                        isGamestart = true;
+                     });
                }
             });
          } else {
@@ -670,10 +673,10 @@ function rot() {
          .addEventListener("transitionend", () => {
             isGamestart = true;
          });
-         document
-            .getElementById("top-page")
-            .addEventListener("webkitTransitionend", () => {
-               isGamestart = true;
-            });
+      document
+         .getElementById("top-page")
+         .addEventListener("webkitTransitionend", () => {
+            isGamestart = true;
+         });
    }
 }
