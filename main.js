@@ -580,8 +580,8 @@ window.addEventListener("devicemotion", function devicemotionHandler(event) {
       else if (os == "iphone") {
          xg = event.accelerationIncludingGravity.x / 8;
          yg = event.accelerationIncludingGravity.y / 8;
-         xa = event.acceleration.x * 1.5;
-         ya = -event.acceleration.y * 1.5;
+         xa = event.acceleration.x;
+         ya = event.acceleration.y;
       }
       document.getElementById("datatext").innerHTML = `${((Math.round(event.acceleration.x * 100)) / 100)}, ${((Math.round(event.acceleration.y * 100)) / 100)}`;
       switch (deviceOrientation) {
