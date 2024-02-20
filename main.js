@@ -125,7 +125,7 @@ const faketop = Bodies.rectangle(WIDTH / 2, HEIGHT / 4.35, WIDTH, 5, {
       fillStyle: "transparent",
    },
    isStatic: true,
-   collisionFilter: { category: 0b1000 },
+   collisionFilter: { category: 0b0001 },
    label: "faketop",
 });
 const frameleft = Bodies.rectangle(HEIGHT / 30, HEIGHT / 4, HEIGHT / 60, HEIGHT / 10, {
