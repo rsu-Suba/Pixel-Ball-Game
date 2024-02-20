@@ -574,7 +574,7 @@ window.addEventListener("devicemotion", function devicemotionHandler(event) {
       xg = event.accelerationIncludingGravity.x / 25;
       yg = event.accelerationIncludingGravity.y / 25;
       xa = event.acceleration.x / 1.6;
-      ya = -event.acceleration.y / 1.6;
+      ya = event.acceleration.y / 1.6;
    }
    else {
       xg = event.accelerationIncludingGravity.x / 2;
@@ -586,7 +586,7 @@ window.addEventListener("devicemotion", function devicemotionHandler(event) {
    switch (deviceOrientation) {
       case 0:
          engine.world.gravity.x = xg + xa;
-         engine.world.gravity.y = -yg + ya;
+         engine.world.gravity.y = yg + ya;
          break;
       case 90:
          engine.world.gravity.x = -yg - xa;
