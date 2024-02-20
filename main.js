@@ -566,10 +566,10 @@ window.addEventListener(
 
 var deviceOrientation = window.orientation;
 window.addEventListener("devicemotion", function devicemotionHandler(event) {
-   let xg = event.accelerationIncludingGravity.x / 20;
-   let yg = event.accelerationIncludingGravity.y / 20;
-   let xa = event.acceleration.x / 2;
-   let ya = event.acceleration.y / 2;
+   let xg = event.accelerationIncludingGravity.x / 10;
+   let yg = event.accelerationIncludingGravity.y / 10;
+   let xa = event.acceleration.x;
+   let ya = event.acceleration.y;
    document.getElementById("datatext").innerHTML = `${((Math.round(event.acceleration.x * 100)) / 100)}, ${((Math.round(event.acceleration.y * 100)) / 100)}`;
    switch (deviceOrientation) {
       case 0:
@@ -588,7 +588,7 @@ window.addEventListener("devicemotion", function devicemotionHandler(event) {
          engine.world.gravity.x = -xg - xa;
          engine.world.gravity.y = yg - xa;
    }
-   if ( window.navigator.userAgent.indexOf('Android') > 0 ) {
+   if (os == "android") {
      engine.world.gravity.x = - engine.world.gravity.x;
      engine.world.gravity.y = - engine.world.gravity.y;
    }
