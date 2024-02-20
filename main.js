@@ -581,7 +581,7 @@ window.addEventListener("devicemotion", function devicemotionHandler(event) {
          xg = event.accelerationIncludingGravity.x / 8;
          yg = event.accelerationIncludingGravity.y / 8;
          xa = event.acceleration.x * 1.5;
-         ya = -event.acceleration.y * 1.5;
+         ya = event.acceleration.y * 1.5;
       }
       document.getElementById("datatext").innerHTML = `${((Math.round(event.acceleration.x * 100)) / 100)}, ${((Math.round(event.acceleration.y * 100)) / 100)}`;
       switch (deviceOrientation) {
@@ -599,12 +599,12 @@ window.addEventListener("devicemotion", function devicemotionHandler(event) {
             break;
          case 180:
             engine.world.gravity.x = -xg - xa;
-            engine.world.gravity.y = yg - xa;
+            engine.world.gravity.y = yg - ya;
       }
       if (os == "android") {
         engine.world.gravity.x = -engine.world.gravity.x;
+        engine.world.gravity.y = -engine.world.gravity.y;
       }
-      engine.world.gravity.y = -engine.world.gravity.y;
    }
 });
 
