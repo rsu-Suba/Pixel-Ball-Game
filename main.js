@@ -549,16 +549,18 @@ function windowResized() {
 
 let os;
 
-/*
-window.addEventListener('deviceorientation', e => {
-   let beta = Math.floor(e.beta);
-   let gamma = Math.floor(e.gamma);
-   if (gravityMode == 1){
-      engine.gravity.x = (gamma / 60);
-      engine.gravity.y = (beta / 60);
-   }
-}, false);
-*/
+window.addEventListener(
+   "deviceorientation",
+   (e) => {
+      let beta = Math.floor(e.beta);
+      let gamma = Math.floor(e.gamma);
+      if (gravityMode == 1) {
+         engine.gravity.x = gamma / 60;
+         engine.gravity.y = beta / 60;
+      }
+   },
+   false
+);
 
 var deviceOrientation = screen.orientation;
 window.addEventListener("devicemotion", function devicemotionHandler(event) {
@@ -635,59 +637,41 @@ function rot() {
             "DeviceOrientationEvent.requestPermission not detected";
       }
       DeviceOrientationEvent.requestPermission().then(function (
-         permissionState
+         permissionStateOrien
       ) {
-         if (permissionState === "granted") {
-            document.getElementById("datatext").innerHTML = `OK`;
-            document.getElementById("rot-admin").className = "rot-admin";
-            document.getElementById("top-page").addEventListener("transitionend", () => {
-               isGamestart = true;
+         if (permissionStateOrien === "granted") {
+            DeviceMotionEvent.requestPermission().then(function (
+               permissionStateMotion
+            ) {
+               if (permissionStateMotion === "granted") {
+                  document.getElementById("datatext").innerHTML = `OK`;
+                  document.getElementById("rot-admin").className = "rot-admin";
+                  document
+                     .getElementById("top-page")
+                     .addEventListener("transitionend", () => {
+                        isGamestart = true;
+                     });
+                  document
+                     .getElementById("top-page")
+                     .addEventListener("webkitTransitionend", () => {
+                        isGamestart = true;
+                     });
+               }
             });
-            document
-               .getElementById("top-page")
-               .addEventListener("webkitTransitionend", () => {
-                  isGamestart = true;
-               });
          } else {
             document.getElementById("datatext").innerHTML = `😭`;
          }
       });
    } else {
-      document.getElementById("top-page").addEventListener("transitionend", () => {
-         isGamestart = true;
-      });
+      document
+         .getElementById("top-page")
+         .addEventListener("transitionend", () => {
+            isGamestart = true;
+         });
       document
          .getElementById("top-page")
          .addEventListener("webkitTransitionend", () => {
             isGamestart = true;
          });
    }
-}
-
-function rotAdminButton() {
-   document.getElementById("datatext").innerHTML = "Clicked";
-   if (typeof DeviceOrientationEvent !== "function") {
-      document.getElementById("datatext").innerHTML =
-         "DeviceOrientationEvent not detected";
-   }
-   if (typeof DeviceOrientationEvent.requestPermission !== "function") {
-      document.getElementById("datatext").innerHTML =
-         "DeviceOrientationEvent.requestPermission not detected";
-   }
-   DeviceOrientationEvent.requestPermission().then(function (permissionState) {
-      if (permissionState === "granted") {
-         document.getElementById("datatext").innerHTML = `OK`;
-         document.getElementById("rot-admin").className = "rot-admin";
-         document.getElementById("top-page").addEventListener("transitionend", () => {
-            isGamestart = true;
-         });
-         document
-            .getElementById("top-page")
-            .addEventListener("webkitTransitionend", () => {
-               isGamestart = true;
-            });
-      } else {
-         document.getElementById("datatext").innerHTML = `😭`;
-      }
-   });
 }
