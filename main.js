@@ -602,7 +602,7 @@ window.addEventListener("devicemotion", function devicemotionHandler(event) {
    }
    if (os == "android") {
      engine.world.gravity.x = -engine.world.gravity.x;
-     engine.world.gravity.y = -engine.world.gravity.y;
+     //engine.world.gravity.y = -engine.world.gravity.y;
    }
 });
 
