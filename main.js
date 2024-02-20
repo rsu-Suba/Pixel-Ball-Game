@@ -80,9 +80,9 @@ const ground = Bodies.rectangle(WIDTH / 2, HEIGHT, WIDTH, HEIGHT / 35, {
    collisionFilter: { category: 0b0001 },
    label: "ground",
 });
-const topground = Bodies.rectangle(WIDTH / 2, HEIGHT / 3.5, WIDTH, 5, {
+const topground = Bodies.rectangle(WIDTH / 2, HEIGHT / 4, WIDTH, 5, {
    render: {
-      fillStyle: "#000",
+      fillStyle: "transparent",
    },
    isStatic: true,
    collisionFilter: { category: 0b0100 },
@@ -324,6 +324,7 @@ Events.on(engine, "collisionStart", function (event) {
          else if (bodyB.label === "Circle Body3") {
             bodyB.label = "Circle Body4";
          }
+         bodyB.collisionFilter = { category: 0b0010 , mask: 0b0111};
       }
       else if (bodyA.label === "Circle Body2" || bodyA.label === "Circle Body3" || bodyA.label === "Circle Body4" || bodyA.label === "Circle Body5") {
          if (bodyB.label === "Circle Body" || bodyB.label === "Circle Body5") {
@@ -363,6 +364,7 @@ Events.on(engine, "collisionStart", function (event) {
          else if (bodyB.label === "Circle Body2") {
             bodyB.label = "Circle Body4";
          }
+         bodyB.collisionFilter = { category: 0b0010 , mask: 0b0111};
          if (bodyA.circleRadius == bodyB.circleRadius) {
             console.log("same");
             score += points[ballsize.indexOf(bodyA.circleRadius, 0)];
