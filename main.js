@@ -277,7 +277,7 @@ Events.on(engine, "collisionStart", function (event) {
       //Circle Body4 = ground & ball
       //Circle Body5 = bornball
       
-      if (bodyA.label === "topground" && bodyB.label === "Circle Body3" || bodyB.label === "Circle Body4"){
+      if (bodyA.label === "topground" && (bodyB.label === "Circle Body3" || bodyB.label === "Circle Body4")){
          gameover();
       }
       if (bodyA.label === "ground"){
