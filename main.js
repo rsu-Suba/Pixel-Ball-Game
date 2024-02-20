@@ -566,8 +566,8 @@ window.addEventListener(
 
 var deviceOrientation = window.orientation;
   window.addEventListener("devicemotion", function devicemotionHandler(event) {
-    var xg = event.accelerationIncludingGravity.x / 10;
-    var yg = event.accelerationIncludingGravity.y / 10;
+    var xg = event.accelerationIncludingGravity.x / 60;
+    var yg = event.accelerationIncludingGravity.y / 60;
     switch (deviceOrientation) {
       case 0:
         engine.world.gravity.x = xg + event.acceleration.x;
@@ -584,11 +584,6 @@ var deviceOrientation = window.orientation;
       case 180:
         engine.world.gravity.x = -xg - event.acceleration.x;
         engine.world.gravity.y = yg - event.acceleration.x;
-    }
-
-    if ( window.navigator.userAgent.indexOf('Android') > 0 ) {
-      engine.world.gravity.x = - engine.world.gravity.x;
-      engine.world.gravity.y = - engine.world.gravity.y;
     }
   });
 
