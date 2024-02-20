@@ -536,7 +536,8 @@ function windowResized() {
 
 let os;
 
-const requestDeviceOrientationPermission = () => {
+function requestDeviceOrientationPermission() {
+   document.getElementById("datatext").innerHTML = "Clicked";
    if (os === 'iphone'){
       if (DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission === 'function') {
         DeviceOrientationEvent.requestPermission()
@@ -549,12 +550,12 @@ const requestDeviceOrientationPermission = () => {
             }, false);
           } else {}
         })
-        .catch()
+        .catch();
       }
       else { return }
    }
    else{ return };
- };
+ }
  
  window.addEventListener('deviceorientation', e => {
    let alpha = Math.floor(e.alpha);
@@ -591,7 +592,7 @@ var deviceOrientation = screen.orientation;
   });
 
 const startButton = document.getElementById("start-button");
-startButton.addEventListener('click', requestDeviceOrientationPermission, false)
+//startButton.addEventListener('click', requestDeviceOrientationPermission, false)
 
 function osdetect() {
    if (navigator.userAgent.indexOf("iPhone") > 0 || navigator.userAgent.indexOf("iPad") > 0 || navigator.userAgent.indexOf("iPod") > 0) {
@@ -604,7 +605,6 @@ function osdetect() {
    }
    else {
       os = "pc";
-      startButton.style = "display: none;"
    }
    console.log(os);
 }
