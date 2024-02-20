@@ -271,37 +271,44 @@ Events.on(engine, "collisionStart", function (event) {
       const { bodyA, bodyB } = pair;
       //bodyA→相手
       //bodyB→自分
+      //Circle Body = Nothing
+      //Circle Body2 = ground
+      //Circle Body3 = ball
+      //Circle Body4 = ground & ball
+      //Circle Body5 = bornball
       
       if (bodyA.label === "topground" && bodyB.label === "Circle Body3" || bodyB.label === "Circle Body4"){
          gameover();
       }
       if (bodyA.label === "ground"){
          if (bodyB.label === "Circle Body" || bodyB.label === "Circle Body5"){
-            clickint++;
-            if (clickint == 2){
-               mode = Math.floor(Math.random() * 4);
-               if (mode == 0){
-                  engine.gravity.x = -0.85;
-                  engine.gravity.y = 0.5;
-                  ground.label = "wall";
-                  left.label = "ground";
-                  right.label = "wall";
+            if (gravityMode == 0) {
+               clickint++;
+               if (clickint == 2){
+                  mode = Math.floor(Math.random() * 4);
+                  if (mode == 0){
+                     engine.gravity.x = -0.85;
+                     engine.gravity.y = 0.5;
+                     ground.label = "wall";
+                     left.label = "ground";
+                     right.label = "wall";
+                  }
+                  else if (mode == 1){
+                     engine.gravity.x = 0.85;
+                     engine.gravity.y = 0.5;
+                     ground.label = "wall";
+                     left.label = "wall";
+                     right.label = "ground";
+                  }
+                  else if (mode == 2 || mode == 3){
+                     engine.gravity.x = 0;
+                     engine.gravity.y = 1;
+                     ground.label = "ground";
+                     left.label = "wall";
+                     right.label = "wall";
+                  }
+                  clickint = 0;
                }
-               else if (mode == 1){
-                  engine.gravity.x = 0.85;
-                  engine.gravity.y = 0.5;
-                  ground.label = "wall";
-                  left.label = "wall";
-                  right.label = "ground";
-               }
-               else if (mode == 2 || mode == 3){
-                  engine.gravity.x = 0;
-                  engine.gravity.y = 1;
-                  ground.label = "ground";
-                  left.label = "wall";
-                  right.label = "wall";
-               }
-               clickint = 0;
             }
             if (bodyB.label === "Circle Body") {
                canDrop = true;
@@ -417,7 +424,7 @@ let mode = 0;
 let ballnum = 0;
 
 function handleCanvasClick() {
-   if (isGameover){
+   if (isGameover) {
       return
    }
    else {
@@ -585,8 +592,8 @@ function rot(){
    target = document.getElementById("top-page");
    target.className = "play";
    ground.label = "ground";
-   left.label = "wall";
-   right.label = "wall";
+   left.label = "ground";
+   right.label = "ground";
    gravityMode = 1;
    isGamestart = true;
 }
