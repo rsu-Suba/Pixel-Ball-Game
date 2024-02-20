@@ -120,6 +120,14 @@ const fakeright = Bodies.rectangle(WIDTH, HEIGHT / 4.6, HEIGHT / 35, HEIGHT / 7.
    collisionFilter: { category: 0b0001 },
    label: "fakewall",
 });
+const faketop = Bodies.rectangle(WIDTH / 2, HEIGHT / 4.35, WIDTH, 5, {
+   render: {
+      fillStyle: "transparent",
+   },
+   isStatic: true,
+   collisionFilter: { category: 0b1000 },
+   label: "faketop",
+});
 const frameleft = Bodies.rectangle(HEIGHT / 30, HEIGHT / 4, HEIGHT / 60, HEIGHT / 10, {
    render: {
       fillStyle: framecolor,
@@ -241,6 +249,7 @@ let maincontainer = [
    right,
    fakeleft,
    fakeright,
+   faketop,
 ];
 
 /*
@@ -324,7 +333,7 @@ Events.on(engine, "collisionStart", function (event) {
          else if (bodyB.label === "Circle Body3") {
             bodyB.label = "Circle Body4";
          }
-         bodyB.collisionFilter = { category: 0b0010 , mask: 0b0111};
+         bodyB.collisionFilter.mask = "0b0111";
       }
       else if (bodyA.label === "Circle Body2" || bodyA.label === "Circle Body3" || bodyA.label === "Circle Body4" || bodyA.label === "Circle Body5") {
          if (bodyB.label === "Circle Body" || bodyB.label === "Circle Body5") {
@@ -364,7 +373,7 @@ Events.on(engine, "collisionStart", function (event) {
          else if (bodyB.label === "Circle Body2") {
             bodyB.label = "Circle Body4";
          }
-         bodyB.collisionFilter = { category: 0b0010 , mask: 0b0111};
+         bodyB.collisionFilter.mask = "0b0111";
          if (bodyA.circleRadius == bodyB.circleRadius) {
             console.log("same");
             score += points[ballsize.indexOf(bodyA.circleRadius, 0)];
