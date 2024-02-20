@@ -566,10 +566,22 @@ window.addEventListener(
 
 var deviceOrientation = window.orientation;
 window.addEventListener("devicemotion", function devicemotionHandler(event) {
-   let xg = event.accelerationIncludingGravity.x / 10;
-   let yg = event.accelerationIncludingGravity.y / 10;
-   let xa = event.acceleration.x;
-   let ya = event.acceleration.y;
+   let xg;
+   let yg;
+   let xa;
+   let ya;
+   if (os == "android") {
+      xg = event.accelerationIncludingGravity.x / 20;
+      yg = event.accelerationIncludingGravity.y / 20;
+      xa = event.acceleration.x / 2;
+      ya = event.acceleration.y / 2;
+   }
+   else {
+      xg = event.accelerationIncludingGravity.x / 5;
+      yg = event.accelerationIncludingGravity.y / 5;
+      xa = event.acceleration.x;
+      ya = event.acceleration.y;
+   }
    document.getElementById("datatext").innerHTML = `${((Math.round(event.acceleration.x * 100)) / 100)}, ${((Math.round(event.acceleration.y * 100)) / 100)}`;
    switch (deviceOrientation) {
       case 0:
@@ -578,19 +590,18 @@ window.addEventListener("devicemotion", function devicemotionHandler(event) {
          break;
       case 90:
          engine.world.gravity.x = -yg - xa;
-         engine.world.gravity.y = -xg + xa;
+         engine.world.gravity.y = xg - xa;
          break;
       case -90:
          engine.world.gravity.x = yg + xa;
-         engine.world.gravity.y = xg - xa;
+         engine.world.gravity.y = -xg + xa;
          break;
       case 180:
          engine.world.gravity.x = -xg - xa;
-         engine.world.gravity.y = yg - xa;
+         engine.world.gravity.y = -yg + xa;
    }
    if (os == "android") {
      engine.world.gravity.x = - engine.world.gravity.x;
-     engine.world.gravity.y = - engine.world.gravity.y;
    }
 });
 
