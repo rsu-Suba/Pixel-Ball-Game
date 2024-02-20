@@ -556,7 +556,7 @@ const requestDeviceOrientationPermission = () => {
    else{ return };
  };
  
-
+/*
  window.addEventListener('deviceorientation', e => {
    let alpha = Math.floor(e.alpha);
    let beta = Math.floor(e.beta);
@@ -566,6 +566,35 @@ const requestDeviceOrientationPermission = () => {
       engine.gravity.y = (beta / 60);
    }
 }, false);
+*/
+
+var deviceOrientation = screen.orientation;
+  window.addEventListener("devicemotion", function devicemotionHandler(event) {
+    var xg = event.accelerationIncludingGravity.x / 10;
+    var yg = event.accelerationIncludingGravity.y / 10;
+
+    switch (deviceOrientation) {
+      case 0:
+        engine.world.gravity.x = xg + event.acceleration.x;
+        engine.world.gravity.y = -yg + event.acceleration.y;
+        break;
+      case 90:
+        engine.world.gravity.x = -yg - event.acceleration.x;
+        engine.world.gravity.y = -xg + event.acceleration.x;
+        break;
+      case -90:
+        engine.world.gravity.x = yg + event.acceleration.x;
+        engine.world.gravity.y = xg - event.acceleration.x;
+        break;
+      case 180:
+        engine.world.gravity.x = -xg - event.acceleration.x;
+        engine.world.gravity.y = yg - event.acceleration.x;
+    }
+    if ( window.navigator.userAgent.indexOf('Android') > 0 ) {
+      engine.world.gravity.x = - engine.world.gravity.x;
+      engine.world.gravity.y = - engine.world.gravity.y;
+    }
+  });
 
 const startButton = document.getElementById("start-button");
 startButton.addEventListener('click', requestDeviceOrientationPermission, false)
