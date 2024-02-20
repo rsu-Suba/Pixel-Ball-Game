@@ -574,12 +574,12 @@ window.addEventListener("devicemotion", function devicemotionHandler(event) {
       if (os == "android") {
          xg = event.accelerationIncludingGravity.x / 25;
          yg = event.accelerationIncludingGravity.y / 25;
-         xa = event.acceleration.x;
-         ya = event.acceleration.y;
+         xa = event.acceleration.x / 1.4;
+         ya = event.acceleration.y / 1.4;
       }
       else {
          xg = event.accelerationIncludingGravity.x / 8;
-         yg = -event.accelerationIncludingGravity.y / 8;
+         yg = event.accelerationIncludingGravity.y / 8;
          xa = event.acceleration.x * 1.5;
          ya = -event.acceleration.y * 1.5;
       }
@@ -603,8 +603,8 @@ window.addEventListener("devicemotion", function devicemotionHandler(event) {
       }
       if (os == "android") {
         engine.world.gravity.x = -engine.world.gravity.x;
-        engine.world.gravity.y = -engine.world.gravity.y;
       }
+      engine.world.gravity.y = -engine.world.gravity.y;
    }
 });
 
