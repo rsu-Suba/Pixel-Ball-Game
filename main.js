@@ -579,7 +579,7 @@ window.addEventListener("devicemotion", function devicemotionHandler(event) {
       }
       else {
          xg = event.accelerationIncludingGravity.x / 8;
-         yg = event.accelerationIncludingGravity.y / 8;
+         yg = -event.accelerationIncludingGravity.y / 8;
          xa = event.acceleration.x * 1.5;
          ya = event.acceleration.y * 1.5;
       }
@@ -599,7 +599,7 @@ window.addEventListener("devicemotion", function devicemotionHandler(event) {
             break;
          case 180:
             engine.world.gravity.x = -xg - xa;
-            engine.world.gravity.y = yg - ya;
+            engine.world.gravity.y = yg + ya;
       }
       if (os == "android") {
         engine.world.gravity.x = -engine.world.gravity.x;
