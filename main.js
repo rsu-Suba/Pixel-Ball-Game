@@ -120,7 +120,7 @@ const fakeright = Bodies.rectangle(WIDTH, HEIGHT / 4.6, HEIGHT / 35, HEIGHT / 7.
    collisionFilter: { category: 0b0001 },
    label: "fakewall",
 });
-const faketop = Bodies.rectangle(WIDTH / 2, HEIGHT / 4.35, WIDTH, 5, {
+const faketop = Bodies.rectangle(WIDTH / 2, HEIGHT / 7.5, WIDTH, 5, {
    render: {
       fillStyle: "transparent",
    },
