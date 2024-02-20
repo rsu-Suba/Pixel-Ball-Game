@@ -572,16 +572,16 @@ window.addEventListener("devicemotion", function devicemotionHandler(event) {
       let xa;
       let ya;
       if (os == "android") {
-         xg = event.accelerationIncludingGravity.x / 25;
-         yg = event.accelerationIncludingGravity.y / 25;
-         xa = event.acceleration.x / 1.4;
-         ya = event.acceleration.y / 1.4;
+         xg = event.accelerationIncludingGravity.x / 30;
+         yg = event.accelerationIncludingGravity.y / 30;
+         xa = event.acceleration.x / 1.8;
+         ya = event.acceleration.y / 1.8;
       }
       else if (os == "iphone") {
-         xg = event.accelerationIncludingGravity.x / 8;
-         yg = event.accelerationIncludingGravity.y / 8;
-         xa = event.acceleration.x;
-         ya = event.acceleration.y;
+         xg = event.accelerationIncludingGravity.x / 5;
+         yg = event.accelerationIncludingGravity.y / 5;
+         xa = event.acceleration.x * 2;
+         ya = event.acceleration.y * 2;
       }
       document.getElementById("datatext").innerHTML = `${((Math.round(event.acceleration.x * 100)) / 100)}, ${((Math.round(event.acceleration.y * 100)) / 100)}`;
       switch (deviceOrientation) {
@@ -667,16 +667,7 @@ function rot() {
             ) {
                if (permissionStateMotion === "granted") {
                   document.getElementById("datatext").innerHTML = `OK`;
-                  document
-                     .getElementById("top-page")
-                     .addEventListener("transitionend", () => {
-                        isGamestart = true;
-                     });
-                  document
-                     .getElementById("top-page")
-                     .addEventListener("webkitTransitionend", () => {
-                        isGamestart = true;
-                     });
+                  isGamestart = true;
                }
             });
          } else {
