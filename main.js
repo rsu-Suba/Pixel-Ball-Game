@@ -625,11 +625,40 @@ function rot() {
    right.label = "ground";
    gravityMode = 1;
    if (os == "iphone") {
-      document.getElementById("rot-admin").className = "rot-admin-show";
+      document.getElementById("datatext").innerHTML = "Clicked";
+      if (typeof DeviceOrientationEvent !== "function") {
+         document.getElementById("datatext").innerHTML =
+            "DeviceOrientationEvent not detected";
+      }
+      if (typeof DeviceOrientationEvent.requestPermission !== "function") {
+         document.getElementById("datatext").innerHTML =
+            "DeviceOrientationEvent.requestPermission not detected";
+      }
+      DeviceOrientationEvent.requestPermission().then(function (
+         permissionState
+      ) {
+         if (permissionState === "granted") {
+            document.getElementById("datatext").innerHTML = `OK`;
+            document.getElementById("rot-admin").className = "rot-admin";
+            document.getElementById("top-page").addEventListener("transitionend", () => {
+               isGamestart = true;
+            });
+            document
+               .getElementById("top-page")
+               .addEventListener("webkitTransitionend", () => {
+                  isGamestart = true;
+               });
+         } else {
+            document.getElementById("datatext").innerHTML = `😭`;
+         }
+      });
    } else {
+      document.getElementById("top-page").addEventListener("transitionend", () => {
+         isGamestart = true;
+      });
       document
-         .getElementById("rot-admin")
-         .addEventListener("transitionend", () => {
+         .getElementById("top-page")
+         .addEventListener("webkitTransitionend", () => {
             isGamestart = true;
          });
    }
@@ -649,6 +678,9 @@ function rotAdminButton() {
       if (permissionState === "granted") {
          document.getElementById("datatext").innerHTML = `OK`;
          document.getElementById("rot-admin").className = "rot-admin";
+         document.getElementById("top-page").addEventListener("transitionend", () => {
+            isGamestart = true;
+         });
          document
             .getElementById("top-page")
             .addEventListener("webkitTransitionend", () => {
