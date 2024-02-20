@@ -566,15 +566,15 @@ window.addEventListener(
 
 var deviceOrientation = window.orientation;
 window.addEventListener("devicemotion", function devicemotionHandler(event) {
-   let xg = event.accelerationIncludingGravity.x / 100;
-   let yg = event.accelerationIncludingGravity.y / 100;
+   let xg = event.accelerationIncludingGravity.x / 10;
+   let yg = event.accelerationIncludingGravity.y / 10;
    let xa = event.acceleration.x / 5;
    let ya = event.acceleration.y / 5;
-   document.getElementById("datatext").innerHTML = `${Math.round(event.acceleration.x * 100) / 100}, ${Math.round(event.acceleration.y * 100) / 100}`;
+   document.getElementById("datatext").innerHTML = `${((Math.round(event.acceleration.x * 100)) / 100)}, ${((Math.round(event.acceleration.y * 100)) / 100)}`;
    switch (deviceOrientation) {
       case 0:
          engine.world.gravity.x = xg + xa;
-         engine.world.gravity.y = yg + ya;
+         engine.world.gravity.y = -yg + ya;
          break;
       case 90:
          engine.world.gravity.x = -yg - xa;
