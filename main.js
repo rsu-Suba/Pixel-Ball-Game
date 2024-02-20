@@ -562,6 +562,7 @@ window.addEventListener(
    false
 );
 
+/*
 var deviceOrientation = screen.orientation;
 window.addEventListener("devicemotion", function devicemotionHandler(event) {
    var xg = event.accelerationIncludingGravity.x / 10;
@@ -585,6 +586,7 @@ window.addEventListener("devicemotion", function devicemotionHandler(event) {
          engine.gravity.y = yg - event.acceleration.x;
    }
 });
+*/
 
 const startButton = document.getElementById("start-button");
 //startButton.addEventListener('click', requestDeviceOrientationPermission, false)
@@ -651,11 +653,11 @@ function rot() {
                      .addEventListener("transitionend", () => {
                         isGamestart = true;
                      });
-                  document
-                     .getElementById("top-page")
-                     .addEventListener("webkitTransitionend", () => {
-                        isGamestart = true;
-                     });
+                     document
+                        .getElementById("top-page")
+                        .addEventListener("webkitTransitionend", () => {
+                           isGamestart = true;
+                        });
                }
             });
          } else {
@@ -668,10 +670,10 @@ function rot() {
          .addEventListener("transitionend", () => {
             isGamestart = true;
          });
-      document
-         .getElementById("top-page")
-         .addEventListener("webkitTransitionend", () => {
-            isGamestart = true;
-         });
+         document
+            .getElementById("top-page")
+            .addEventListener("webkitTransitionend", () => {
+               isGamestart = true;
+            });
    }
 }
