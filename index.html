@@ -21,14 +21,13 @@
     <div class="bg-grid"></div>
   </div>
   <text class="datatext" id="datatext">😜</text>
-  <text class="ver" id="ver" style="position:fixed;right: 2vw;">2.20.24.11</text>
+  <text class="ver" id="ver" style="position:fixed;right: 2vw;">2.20.24.12</text>
   <canvas id="maincanvas"></canvas>
   <div class="data">
     <div class="score">
       <img class="scoreimg" src="./Score.png"/>
       <div class="scoretext" id="scoretext"></div>
     </div>
-    <button id="start-button" onclick="requestDeviceOrientationPermission();">✔️</button>
     <div class="sinka">
       <img class="sinkabase" src="./Sinka.png"/>
       <img class="nextball" id="nextball" src="./BallTexs/0.png"/>
@@ -37,16 +36,16 @@
   <div class="gameover" id="gameover">
     <text>Game Over ( ŏ_ŏ)</text>
   </div>
+  <div id="rot-admin" class="rot-admin">
+    <p>iPhoneでは傾きを検知するために加速度センサへのアクセスを許可する必要があります。</p>
+    <p>下のボタンを押して出てくるダイアログの許可を押してください。</p>
+    <button class="rot-admin-button" onclick="rotAdminButton();">許可画面を出す</button>
+  </div>
   <div id="top-page">
       <div class="top-page-buttons">
           <button class="start" onclick="start();">1</button>
           <button class="rot" onclick="rot();">2</button>
       </div>
-  </div>
-  <div id="rot-admin">
-    <p>iPhoneでは傾きを検知するために加速度センサへのアクセスを許可する必要があります。</p>
-    <p>下のボタンを押して出てくるダイアログの許可を押してください。</p>
-    <button class="rot-admin-button" onclick="rotAdminButton();">許可画面を出す</button>
   </div>
 </div>
 </body>

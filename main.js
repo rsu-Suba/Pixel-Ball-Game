@@ -361,32 +361,6 @@ Events.on(engine, "collisionStart", function (event) {
       }
       if (bodyA.label === "ground") {
          if (bodyB.label === "Circle Body" || bodyB.label === "Circle Body5") {
-            if (gravityMode == 0) {
-               clickint++;
-               if (clickint == 2) {
-                  mode = Math.floor(Math.random() * 4);
-                  if (mode == 0) {
-                     engine.gravity.x = -0.85;
-                     engine.gravity.y = 0.5;
-                     ground.label = "wall";
-                     left.label = "ground";
-                     right.label = "wall";
-                  } else if (mode == 1) {
-                     engine.gravity.x = 0.85;
-                     engine.gravity.y = 0.5;
-                     ground.label = "wall";
-                     left.label = "wall";
-                     right.label = "ground";
-                  } else if (mode == 2 || mode == 3) {
-                     engine.gravity.x = 0;
-                     engine.gravity.y = 1;
-                     ground.label = "ground";
-                     left.label = "wall";
-                     right.label = "wall";
-                  }
-                  clickint = 0;
-               }
-            }
             if (bodyB.label === "Circle Body") {
                canDrop = true;
             }
@@ -402,32 +376,6 @@ Events.on(engine, "collisionStart", function (event) {
          bodyA.label === "Circle Body5"
       ) {
          if (bodyB.label === "Circle Body" || bodyB.label === "Circle Body5") {
-            if (gravityMode == 0) {
-               clickint++;
-               if (clickint == 2) {
-                  mode = Math.floor(Math.random() * 4);
-                  if (mode == 0) {
-                     engine.gravity.x = -0.85;
-                     engine.gravity.y = 0.5;
-                     ground.label = "wall";
-                     left.label = "ground";
-                     right.label = "wall";
-                  } else if (mode == 1) {
-                     engine.gravity.x = 0.85;
-                     engine.gravity.y = 0.5;
-                     ground.label = "wall";
-                     left.label = "wall";
-                     right.label = "ground";
-                  } else if (mode == 2 || mode == 3) {
-                     engine.gravity.x = 0;
-                     engine.gravity.y = 1;
-                     ground.label = "ground";
-                     left.label = "wall";
-                     right.label = "wall";
-                  }
-                  clickint = 0;
-               }
-            }
             if (bodyB.label === "Circle Body") {
                canDrop = true;
             }
@@ -601,6 +549,17 @@ function windowResized() {
 
 let os;
 
+/*
+window.addEventListener('deviceorientation', e => {
+   let beta = Math.floor(e.beta);
+   let gamma = Math.floor(e.gamma);
+   if (gravityMode == 1){
+      engine.gravity.x = (gamma / 60);
+      engine.gravity.y = (beta / 60);
+   }
+}, false);
+*/
+
 var deviceOrientation = screen.orientation;
 window.addEventListener("devicemotion", function devicemotionHandler(event) {
    var xg = event.accelerationIncludingGravity.x / 10;
@@ -648,7 +607,14 @@ function start() {
    target = document.getElementById("top-page");
    target.className = "play";
    gravityMode = 0;
-   isGamestart = true;
+   document.getElementById("top-page").addEventListener("transitionend", () => {
+      isGamestart = true;
+   });
+   document
+      .getElementById("top-page")
+      .addEventListener("webkitTransitionend", () => {
+         isGamestart = true;
+      });
 }
 
 function rot() {
@@ -658,52 +624,37 @@ function rot() {
    left.label = "ground";
    right.label = "ground";
    gravityMode = 1;
-   isGamestart = true;
+   if (os == "iphone") {
+      document.getElementById("rot-admin").className = "rot-admin-show";
+   } else {
+      document
+         .getElementById("rot-admin")
+         .addEventListener("transitionend", () => {
+            isGamestart = true;
+         });
+   }
 }
 
 function rotAdminButton() {
    document.getElementById("datatext").innerHTML = "Clicked";
-   /*
-   if (os === 'iphone'){
-      document.getElementById("datatext").innerHTML = `❓`;
-      if (DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission === 'function') {
-        DeviceOrientationEvent.requestPermission()
-        .then(function (responce) {
-          if (responce === 'granted') {
-            window.addEventListener('deviceorientation', e => {
-               let alpha = Math.floor(e.alpha);
-               let beta = Math.floor(e.beta);
-               let gamma = Math.floor(e.gamma);
-            
-               datadocument.getElementById("datatext").innerHTML = `${alpha}, ${beta}, ${gamma}`;
-               console.log(`${alpha}, ${beta}, ${gamma}`);
-            }, false);
-          } else {
-            // 許可を得られなかった場合の処理
-            document.getElementById("datatext").innerHTML = `🥺`;
-          }
-        })
-        .catch(document.getElementById("datatext").innerHTML = `😭`;)
-      }
-      else { return }
-   }
-   else{ return };
-   */
    if (typeof DeviceOrientationEvent !== "function") {
       document.getElementById("datatext").innerHTML =
          "DeviceOrientationEvent not detected";
    }
    if (typeof DeviceOrientationEvent.requestPermission !== "function") {
-      window.addEventListener("deviceorientation", handler);
       document.getElementById("datatext").innerHTML =
          "DeviceOrientationEvent.requestPermission not detected";
    }
    DeviceOrientationEvent.requestPermission().then(function (permissionState) {
       if (permissionState === "granted") {
-         // 許可を得られた場合、deviceorientationをイベントリスナーに追加
          document.getElementById("datatext").innerHTML = `OK`;
+         document.getElementById("rot-admin").className = "rot-admin";
+         document
+            .getElementById("top-page")
+            .addEventListener("webkitTransitionend", () => {
+               isGamestart = true;
+            });
       } else {
-         // 許可を得られなかった場合の処理
          document.getElementById("datatext").innerHTML = `😭`;
       }
    });
