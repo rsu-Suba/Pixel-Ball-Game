@@ -558,6 +558,7 @@ function start() {
 }
 
 function rot() {
+   isGamestart = false;
    isGameStartMenu = 1;
    back_panel_play(0);
    top_page.className = "play";
@@ -762,7 +763,7 @@ gameover_page.addEventListener("webkitTransitionend", () => {
    }
 });
 window.addEventListener("devicemotion", function devicemotionHandler(event) {
-   if (gravityMode == 1) {
+   if (gravityMode == 1 && isGamestart == true) {
       let xg;
       let yg;
       let xa;
