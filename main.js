@@ -515,6 +515,7 @@ function gameover() {
       document.getElementById("gameover-text").className = "top-text-div";
       document.getElementById("gameover-buttons").classList =
          "top-page-buttons pause-page";
+      back_panel_play(1);
       for (let i = 0; i < 3; i++) {
          document.getElementsByClassName("scores-text")[i].style.fontSize =
             "125%";
@@ -580,6 +581,7 @@ function rot() {
                permissionStateMotion
             ) {
                if (permissionStateMotion === "granted") {
+                  document.getElementById("datatext").innerHTML = "";
                   isGamestart = true;
                }
             });

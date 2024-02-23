@@ -137,7 +137,7 @@ button {
 
    .scoretext {
       display: inline-block;
-      font-family: "Carter One";
+      font-family: "Carter One", sans-serif;
       background: -webkit-linear-gradient(180deg, #fcf9ee 30%, #e0a31f 80%);
       background: linear-gradient(180deg, #fcf9ee 30%, #e0a31f 80%);
       -webkit-background-clip: text;
@@ -158,7 +158,7 @@ button {
 
    .hiscoretext {
       color: #ece2cc;
-      font-family: "Carter One";
+      font-family: "Carter One", sans-serif;
       -webkit-text-stroke: 2px #a96b17;
       text-stroke: 2px #a96b17;
       font-size: min(4vw, max(1.5vh));
@@ -309,7 +309,7 @@ button {
       height: 8%;
       font-size: 1.2vh;
       left: 0;
-      bottom: 8%;
+      bottom: 6%;
       position: absolute;
       white-space: nowrap;
       text-align: left;
