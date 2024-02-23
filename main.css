@@ -295,24 +295,32 @@ button {
       box-shadow: #555 0 0 10px;
    }
 
-   #scoreDelete {
-      width: 40%;
-      height: 8%;
-      font-size: 1.2vh;
-      left: 60%;
-      position: relative;
+   .hiScore-reset-div {
+    position: relative;
+    height: 8%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
    }
 
-   #canthiscore,
-   #deletehiscore {
-      width: 40%;
-      height: 8%;
-      font-size: 1.2vh;
-      left: 0;
-      bottom: 6%;
-      position: absolute;
-      white-space: nowrap;
-      text-align: left;
+   .score-cookie-text {
+    display: flex;
+    position: relative;
+    align-items: center;
+   }
+
+   #canthiscore, #deletehiscore {
+    text-align: left;
+    position: absolute;
+    margin: 0 auto;
+    white-space: nowrap;
+   }
+
+   #scoreDelete {
+    height: 100%;
+    width: 40%;
+    font-size: 1.4vh;
    }
 
    .pause {

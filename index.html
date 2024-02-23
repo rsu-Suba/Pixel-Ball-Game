@@ -22,8 +22,8 @@
     <div class="bg-wall"></div>
     <div class="bg-grid"></div>
   </div>
-  <text class="datatext" id="datatext" style="font-size:3vw;">ジャイロ機能は使えません</text>
-  <text class="ver" id="ver" style="position:fixed;right: 2vw;">2.23.24.3</text>
+  <text class="datatext" id="datatext" style="font-size:3vw;"></text>
+  <text class="ver" id="ver" style="position:fixed;right: 2vw;">2.23.24.4</text>
   <canvas id="maincanvas"></canvas>
   <div class="data">
     <div class="score">
@@ -48,9 +48,13 @@
     <div class="top-page-buttons">
         <button class="start" onclick="start();">通常モード</button>
         <button class="rot" onclick="rot();">ジャイロモード</button>
-        <text id="canthiscore" style="opacity: 1;">Cookieが無効なため<br>ハイスコア機能は使えません</text>
-        <text id="deletehiscore" style="opacity: 0;font-size: 1.8vh;">ハイスコアリセット完了</text>
-        <button id="scoreDelete" style="opacity: 0;" onclick="scoreDelete();">ハイスコアリセット</button>
+        <div class="hiScore-reset-div">
+          <div class="score-cookie-text">
+            <text id="canthiscore" style="opacity: 1;">Cookieが無効なため<br>ハイスコア機能は使えません</text>
+            <text id="deletehiscore" style="opacity: 0;font-size: 1.8vh;">ハイスコアリセット完了</text>
+          </div>
+          <button id="scoreDelete" style="opacity: 0;" onclick="scoreDelete();">ハイスコアリセット</button>
+        </div>
     </div>
   </div>
   <div id="pause-page" class="play">

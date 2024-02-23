@@ -554,6 +554,7 @@ function start() {
    top_page.className = "play";
    gravityMode = 0;
    document.getElementById("deletehiscore").style.opacity = 0;
+   document.getElementById("datatext").innerHTML = "";
 }
 
 function rot() {
@@ -772,10 +773,10 @@ window.addEventListener("devicemotion", function devicemotionHandler(event) {
          xa = event.acceleration.x / 2.5;
          ya = event.acceleration.y / 2.5;
       } else if (os == "iphone") {
-         xg = event.accelerationIncludingGravity.x / 7;
-         yg = event.accelerationIncludingGravity.y / 7;
-         xa = event.acceleration.x * 4;
-         ya = event.acceleration.y * 6;
+         xg = event.accelerationIncludingGravity.x / 6;
+         yg = event.accelerationIncludingGravity.y / 6;
+         xa = event.acceleration.x * 2;
+         ya = event.acceleration.y * 3;
       }
       switch (deviceOrientation) {
          case 0:
