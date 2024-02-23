@@ -1,16 +1,18 @@
 const canvas = document.getElementById("maincanvas");
+const back_panel = document.getElementById("back-panel");
+const top_page = document.getElementById("top-page");
+const pause_page = document.getElementById("pause-page");
+const gameover_page = document.getElementById("gameover");
+const gameover_hiscore = document.getElementById("hiScore");
+const gameover_score = document.getElementById("getScore");
+const gameover_hiscore_getscore = document.getElementById("hiScore-getScore");
+const startButton = document.getElementById("start-button");
+const scoreSpan = document.getElementById("scoretext");
+const hiScoreSpan = document.getElementById("hiscoretext");
+const nextball = document.getElementById("nextball");
 const windowwidth = window.innerWidth;
 const WIDTH = windowwidth * 0.85;
 const HEIGHT = (WIDTH / 16) * 27;
-let deviceType = 0;
-
-for (let i = 0; i < 11; i++) {
-   let path = `./BallTexs/${i}.png`;
-   document.getElementById("preloadimg").src = path;
-}
-
-document.getElementById("preloadimg").style = "display: none;";
-
 const Engine = Matter.Engine;
 const Render = Matter.Render;
 const Runner = Matter.Runner;
@@ -18,8 +20,10 @@ const Bodies = Matter.Bodies;
 const Composite = Matter.Composite;
 const Events = Matter.Events;
 const World = Matter.World;
-
-let canDrop = true;
+const framecolor = "#f3d583";
+const framepanelcolor = "rgba(255, 245, 225, 0.3)";
+const gameover_face = ["₍ᐢ.ˬ.ᐡ₎", "( ^)o(^ )b", "乁( ˙ ω˙乁)", "✌︎('ω'✌︎ )"];
+const points = [1, 3, 6, 10, 15, 21, 36, 45, 55, 66, 78];
 let ballsize = [
    Math.floor(WIDTH / (550 / 18)),
    Math.floor(WIDTH / (550 / 24)),
@@ -33,14 +37,38 @@ let ballsize = [
    Math.floor(WIDTH / (550 / 124)),
    Math.floor(WIDTH / (550 / 148)),
 ];
-let points = [1, 3, 6, 10, 15, 21, 36, 45, 55, 66, 78];
+let deviceType = 0;
 let score = 0;
+let hiscore = 0;
+let gravityMode = 0;
+let clickint = 0;
+let mode = 0;
+let ballnum = 0;
+let isTouchnow = 0;
+let isGameStartMenu = 0;
+let canDrop = true;
+let isGamestart = false;
+let isGameover = false;
+let nextangle = Math.floor(Math.random() * 360);
+let nextBallSize = getNextBallSize();
+let nextBallSizecache = getNextBallSize();
+let deviceOrientation = window.orientation;
+let size = ballsize[nextBallSize];
+let cachesize = ballsize[nextBallSize];
+let balls = [];
+let ball;
+let os;
 
-const scoreSpan = document.getElementById("scoretext");
-const nextball = document.getElementById("nextball");
-const gameoverdiv = document.getElementById("gameover");
-scoreSpan.innerHTML = `0`;
-gameoverdiv.style = "display: none;";
+nextball.src = `./BallTexs/${nextBallSizecache}.png`;
+
+for (let i = 0; i < 11; i++) {
+   let path = `./BallTexs/${i}.png`;
+   document.getElementById("preloadimg").src = path;
+}
+document.getElementById("preloadimg").style = "display: none;";
+
+scoreSpan.innerHTML = score;
+gameover_page.style = "display: none;";
 
 const engine = Engine.create();
 const render = Render.create({
@@ -55,10 +83,6 @@ const render = Render.create({
       background: "transparent",
    },
 });
-
-const framecolor = "#f3d583";
-const framepanelcolor = "rgba(255, 245, 225, 0.3)";
-
 const ground = Bodies.rectangle(WIDTH / 2, HEIGHT, WIDTH, HEIGHT / 35, {
    render: {
       fillStyle: framecolor,
@@ -287,8 +311,22 @@ const guide = Bodies.rectangle(
       label: "guide",
    }
 );
-
-let maincontainer = [
+const dropper = Bodies.circle(WIDTH / 2, HEIGHT / 5.5, size, {
+   render: {
+      sprite: {
+         texture: `./BallTexs/${nextBallSize}.png`,
+         xScale: size / 300,
+         yScale: size / 300,
+      },
+   },
+   restitution: 0,
+   friction: 0.2,
+   angle: nextangle,
+   isStatic: true,
+   collisionFilter: { category: 0b0100 },
+   label: "dropper",
+});
+const maincontainer = [
    framepanelleft,
    framepanelright,
    framefront,
@@ -305,25 +343,8 @@ let maincontainer = [
    fakeleft,
    fakeright,
    faketop,
+   dropper,
 ];
-
-/*
-for (let i = 0; i < 11; i++){
-   let ballsample1 = Bodies.circle(WIDTH / 2, 300, ballsize[i], {
-      render: {
-      sprite: {
-      texture: `./BallTexs/${i}.png`,
-      xScale: ballsize[i] / 300,
-      yScale: ballsize[i] / 300,
-      }},
-      restitution: 0,
-      friction: 0.2,
-      angle: 0,
-      collisionFilter: { category: 0x0010 , mask: 0x0011},
-   });
-   World.add(engine.world, ballsample1);
-}
-*/
 
 World.add(engine.world, maincontainer);
 Engine.run(engine);
@@ -333,13 +354,6 @@ Events.on(engine, "collisionStart", function (event) {
    let pairs = event.pairs;
    for (const pair of pairs) {
       const { bodyA, bodyB } = pair;
-      //bodyA→相手
-      //bodyB→自分
-      //Circle Body = Nothing
-      //Circle Body2 = ground
-      //Circle Body3 = ball
-      //Circle Body4 = ground & ball
-      //Circle Body5 = bornball
       if (gravityMode == 0) {
          if (
             bodyA.label === "topground" &&
@@ -385,8 +399,11 @@ Events.on(engine, "collisionStart", function (event) {
          }
          bodyB.collisionFilter.mask = "0b0111";
          if (bodyA.circleRadius == bodyB.circleRadius) {
-            console.log("same");
             score += points[ballsize.indexOf(bodyA.circleRadius, 0)];
+            if (score > hiscore) {
+               hiscore = score;
+               hiScoreSpan.innerHTML = `ハイスコア ${hiscore}`;
+            }
             scoreSpan.innerText = `${score}`;
             if (bodyA.circleRadius < ballsize[10]) {
                let nextsize = ballsize.indexOf(bodyA.circleRadius, 0) + 1;
@@ -409,47 +426,13 @@ Events.on(engine, "collisionStart", function (event) {
                   collisionFilter: { category: 0b0010, mask: 0b0111 },
                });
                World.remove(engine.world, [bodyA, bodyB]);
+               balls.push(ball);
                World.add(engine.world, ball);
             }
          }
       }
    }
 });
-
-let ball;
-let nextangle = Math.floor(Math.random() * 360);
-let nextBallSize = getNextBallSize();
-let nextBallSizecache = getNextBallSize();
-let cachesize = ballsize[nextBallSize];
-nextball.src = `./BallTexs/${nextBallSizecache}.png`;
-let isGamestart = false;
-let isGameover = false;
-let gravityMode = 0;
-
-let size = ballsize[nextBallSize];
-
-const dropper = Bodies.circle(WIDTH / 2, HEIGHT / 5.5, size, {
-   render: {
-      sprite: {
-         texture: `./BallTexs/${nextBallSize}.png`,
-         xScale: size / 300,
-         yScale: size / 300,
-      },
-   },
-   restitution: 0,
-   friction: 0.2,
-   angle: nextangle,
-   isStatic: true,
-   collisionFilter: { category: 0b0100 },
-   label: "dropper",
-});
-
-World.add(engine.world, dropper);
-
-let clickint = 0;
-let mode = 0;
-
-let ballnum = 0;
 
 function handleCanvasClick() {
    if (isGameover) {
@@ -473,13 +456,13 @@ function handleCanvasClick() {
          collisionFilter: { category: 0b0010, mask: 0b0011 },
       });
       ballnum++;
-      console.log(ballnum);
       nextangle = Math.floor(Math.random() * 360);
       nextBallSize = nextBallSizecache;
       nextBallSizecache = getNextBallSize();
       dropsize = ballsize[nextBallSize];
       cachesize = ballsize[nextBallSize];
       World.add(engine.world, ball);
+      balls.push(ball);
       nextball.src = `./BallTexs/${nextBallSizecache}.png`;
       dropper.render.sprite.texture = `./BallTexs/${nextBallSize}.png`;
       (dropper.render.sprite.xScale = cachesize / 300),
@@ -487,31 +470,6 @@ function handleCanvasClick() {
       dropper.angle = nextangle;
    }
 }
-
-function getNextBallSize() {
-   return Math.floor(Math.random() * 4);
-}
-
-let isTouchnow = 0;
-
-window.addEventListener("mousemove", function (e) {
-   let pos = e.clientX;
-   move(pos);
-});
-window.addEventListener("touchmove", function (e) {
-   isTouchnow = 1;
-   let pos = e.changedTouches[0].clientX;
-   move(pos);
-});
-window.addEventListener("click", function (e) {
-   drop();
-});
-window.addEventListener("touchend", function (e) {
-   if (isTouchnow === 1) {
-      drop();
-   }
-   isTouchnow = 0;
-});
 
 function move(pos) {
    pos -= (windowwidth - WIDTH) / 2;
@@ -537,34 +495,270 @@ function drop() {
 }
 
 function gameover() {
-   gameoverdiv.style = "display: block;";
+   //document.getElementById("gameover-text-str").innerHTML = `Game Over ${gameover_face[Math.floor(Math.random() * 4)]}`;
+   document.getElementById(
+      "gameover-text-str"
+   ).innerHTML = `Game Over ${gameover_face[0]}`;
+   gameover_page.className = "top-page";
+   top_page.className = "play";
+   gameover_score.innerHTML = score;
+   gameover_hiscore_getscore.innerHTML = hiscore - score + 1;
    isGameover = true;
    isGamestart = false;
-   console.log("gameover2");
+   if (score > hiscore) {
+      hiscore = score;
+      document.cookie = "hiscore=0; max-age=0";
+      document.cookie = "hiscore=" + score;
+      gameover_hiscore_getscore.innerHTML = `更新`;
+   }
+   gameover_hiscore.innerHTML = hiscore;
+   sleep(1.5, function () {
+      document.getElementById("gameover-text").className = "top-text-div";
+      document.getElementById("gameover-buttons").classList =
+         "top-page-buttons pause-page";
+      for (let i = 0; i < 3; i++) {
+         document.getElementsByClassName("scores-text")[i].style.fontSize =
+            "125%";
+         document.getElementsByClassName("scores-exp")[i].style.fontSize =
+            "55%";
+      }
+   });
+}
+
+function osdetect() {
+   if (
+      navigator.userAgent.indexOf("iPhone") > 0 ||
+      navigator.userAgent.indexOf("iPad") > 0 ||
+      navigator.userAgent.indexOf("iPod") > 0
+   ) {
+      os = "iphone";
+   } else if (navigator.userAgent.indexOf("Android") > 0) {
+      os = "android";
+   } else {
+      os = "pc";
+   }
+   if (navigator.cookieEnabled) {
+      document.getElementById("canthiscore").style.opacity = 0;
+      document.getElementById("scoreDelete").style.opacity = 1;
+      hiscore = converter(document.cookie).hiscore;
+      if (hiscore === undefined) {
+         hiscore = 0;
+      }
+      hiScoreSpan.innerHTML = `ハイスコア ${hiscore}`;
+   }
+}
+
+function start() {
+   isGameStartMenu = 1;
+   back_panel_play(0);
+   top_page.className = "play";
+   gravityMode = 0;
+   document.getElementById("deletehiscore").style.opacity = 0;
+}
+
+function rot() {
+   isGameStartMenu = 1;
+   back_panel_play(0);
+   top_page.className = "play";
+   ground.label = "ground";
+   left.label = "ground";
+   right.label = "ground";
+   gravityMode = 1;
+   if (os == "iphone") {
+      if (typeof DeviceOrientationEvent !== "function") {
+         document.getElementById("datatext").innerHTML =
+            "ジャイロ機能は使えません";
+      }
+      if (typeof DeviceOrientationEvent.requestPermission !== "function") {
+         document.getElementById("datatext").innerHTML =
+            "ジャイロ機能は使えません";
+      }
+      DeviceOrientationEvent.requestPermission().then(function (
+         permissionStateOrien
+      ) {
+         if (permissionStateOrien === "granted") {
+            DeviceMotionEvent.requestPermission().then(function (
+               permissionStateMotion
+            ) {
+               if (permissionStateMotion === "granted") {
+                  isGamestart = true;
+               }
+            });
+         } else {
+            document.getElementById(
+               "datatext"
+            ).innerHTML = `ジャイロ機能は使えません`;
+         }
+      });
+   } else {
+   }
+   document.getElementById("deletehiscore").style.opacity = 0;
+}
+
+function pause(pausemode) {
+   switch (pausemode) {
+      case 0:
+         pause_page.className = "top-page";
+         back_panel_play(1);
+         isGamestart = false;
+         isGameStartMenu = 0;
+         break;
+      case 1:
+         pause_page.className = "play";
+         back_panel_play(0);
+         isGameStartMenu = 1;
+         break;
+      case 2:
+         restart(0);
+         break;
+      case 3:
+         restart(1);
+         break;
+      case 4:
+         restart(2);
+         break;
+   }
+}
+
+function restart(mode) {
+   isGameStartMenu = 0;
+   switch (mode) {
+      case 0:
+         pause_page.className = "play";
+         top_page.className = "top-page";
+         if (score >= hiscore) {
+            document.cookie = "hiscore=0; max-age=0";
+            document.cookie = "hiscore=" + score;
+         }
+         isGamestart = false;
+         isGameStartMenu = 0;
+         break;
+      case 1:
+         top_page.className = "play";
+         gameover_page.className = "play";
+         back_panel_play(0);
+         isGameover = false;
+         isGameStartMenu = 1;
+         break;
+      case 2:
+         gameover_page.className = "play";
+         top_page.className = "top-page";
+         isGameover = false;
+         isGamestart = false;
+         isGameStartMenu = 0;
+         break;
+   }
+   World.remove(engine.world, balls);
+   ballnum = 0;
+   score = 0;
+   scoreSpan.innerText = `${score}`;
+   if (navigator.cookieEnabled) {
+      document.getElementById("canthiscore").style.opacity = 0;
+      hiscore = converter(document.cookie).hiscore;
+      if (hiscore === undefined) {
+         hiscore = 0;
+      }
+      hiScoreSpan.innerHTML = `ハイスコア ${hiscore}`;
+   }
+}
+
+function back_panel_play(mode) {
+   switch (mode) {
+      case 0:
+         back_panel.className = "back-panel-play";
+         break;
+      case 1:
+         back_panel.className = "back-panel";
+         break;
+   }
+}
+
+function scoreDelete() {
+   document.cookie = "hiscore=0; max-age=0";
+   document.getElementById("canthiscore").style.opacity = 0;
+   hiscore = converter(document.cookie).hiscore;
+   if (hiscore === undefined) {
+      hiscore = 0;
+   }
+   hiScoreSpan.innerHTML = `ハイスコア ${hiscore}`;
+   document.getElementById("deletehiscore").style.opacity = 1;
+}
+
+function converter(cookie) {
+   const obj = {};
+   cookie.split(";").map((item) => {
+      obj[item.split("=")[0].trim()] = item.split("=")[1];
+   });
+   return obj;
+}
+
+function sleep(waitSec, callbackFunc) {
+   var spanedSec = 0;
+   var id = setInterval(function () {
+      spanedSec++;
+      if (spanedSec >= waitSec) {
+         clearInterval(id);
+         if (callbackFunc) callbackFunc();
+      }
+   }, 1000);
+}
+
+function getNextBallSize() {
+   return Math.floor(Math.random() * 4);
 }
 
 function windowResized() {
    resizeCanvas(windowWidth, windowHeight);
 }
 
-let os;
-
-/*
-window.addEventListener(
-   "deviceorientation",
-   (e) => {
-      let beta = Math.floor(e.beta);
-      let gamma = Math.floor(e.gamma);
-      if (gravityMode == 1) {
-         engine.gravity.x = gamma / 60;
-         engine.gravity.y = beta / 60;
-      }
-   },
-   false
-);
-*/
-
-var deviceOrientation = window.orientation;
+window.addEventListener("mousemove", function (e) {
+   let pos = e.clientX;
+   move(pos);
+});
+window.addEventListener("touchmove", function (e) {
+   isTouchnow = 1;
+   let pos = e.changedTouches[0].clientX;
+   move(pos);
+});
+window.addEventListener("click", function (e) {
+   drop();
+});
+window.addEventListener("touchend", function (e) {
+   if (isTouchnow === 1) {
+      drop();
+   }
+   isTouchnow = 0;
+});
+top_page.addEventListener("transitionend", () => {
+   if (isGameStartMenu == 1) {
+      isGamestart = true;
+   }
+});
+top_page.addEventListener("webkitTransitionend", () => {
+   if (isGameStartMenu == 1) {
+      isGamestart = true;
+   }
+});
+pause_page.addEventListener("transitionend", () => {
+   if (isGameStartMenu == 1) {
+      isGamestart = true;
+   }
+});
+pause_page.addEventListener("webkitTransitionend", () => {
+   if (isGameStartMenu == 1) {
+      isGamestart = true;
+   }
+});
+gameover_page.addEventListener("transitionend", () => {
+   if (isGameStartMenu == 1) {
+      isGamestart = true;
+   }
+});
+gameover_page.addEventListener("webkitTransitionend", () => {
+   if (isGameStartMenu == 1) {
+      isGamestart = true;
+   }
+});
 window.addEventListener("devicemotion", function devicemotionHandler(event) {
    if (gravityMode == 1) {
       let xg;
@@ -574,16 +768,14 @@ window.addEventListener("devicemotion", function devicemotionHandler(event) {
       if (os == "android") {
          xg = event.accelerationIncludingGravity.x / 30;
          yg = event.accelerationIncludingGravity.y / 30;
-         xa = event.acceleration.x / 1.8;
-         ya = event.acceleration.y / 1.8;
+         xa = event.acceleration.x / 2.5;
+         ya = event.acceleration.y / 2.5;
+      } else if (os == "iphone") {
+         xg = event.accelerationIncludingGravity.x / 7;
+         yg = event.accelerationIncludingGravity.y / 7;
+         xa = event.acceleration.x * 4;
+         ya = event.acceleration.y * 6;
       }
-      else if (os == "iphone") {
-         xg = event.accelerationIncludingGravity.x / 5;
-         yg = event.accelerationIncludingGravity.y / 5;
-         xa = event.acceleration.x * 2;
-         ya = event.acceleration.y * 2;
-      }
-      document.getElementById("datatext").innerHTML = `${((Math.round(event.acceleration.x * 100)) / 100)}, ${((Math.round(event.acceleration.y * 100)) / 100)}`;
       switch (deviceOrientation) {
          case 0:
             engine.world.gravity.x = xg + xa;
@@ -602,88 +794,8 @@ window.addEventListener("devicemotion", function devicemotionHandler(event) {
             engine.world.gravity.y = yg - xa;
       }
       if (os == "android") {
-        engine.world.gravity.x = -engine.world.gravity.x;
-        engine.world.gravity.y = -engine.world.gravity.y;
+         engine.world.gravity.x = -engine.world.gravity.x;
+         engine.world.gravity.y = -engine.world.gravity.y;
       }
    }
 });
-
-const startButton = document.getElementById("start-button");
-//startButton.addEventListener('click', requestDeviceOrientationPermission, false)
-
-function osdetect() {
-   if (
-      navigator.userAgent.indexOf("iPhone") > 0 ||
-      navigator.userAgent.indexOf("iPad") > 0 ||
-      navigator.userAgent.indexOf("iPod") > 0
-   ) {
-      os = "iphone";
-   } else if (navigator.userAgent.indexOf("Android") > 0) {
-      os = "android";
-      startButton.style = "display: none;";
-   } else {
-      os = "pc";
-   }
-   console.log(os);
-}
-
-function start() {
-   target = document.getElementById("top-page");
-   target.className = "play";
-   gravityMode = 0;
-   document.getElementById("top-page").addEventListener("transitionend", () => {
-      isGamestart = true;
-   });
-   document
-      .getElementById("top-page")
-      .addEventListener("webkitTransitionend", () => {
-         isGamestart = true;
-      });
-}
-
-function rot() {
-   target = document.getElementById("top-page");
-   target.className = "play";
-   ground.label = "ground";
-   left.label = "ground";
-   right.label = "ground";
-   gravityMode = 1;
-   if (os == "iphone") {
-      document.getElementById("datatext").innerHTML = "Clicked";
-      if (typeof DeviceOrientationEvent !== "function") {
-         document.getElementById("datatext").innerHTML =
-            "DeviceOrientationEvent not detected";
-      }
-      if (typeof DeviceOrientationEvent.requestPermission !== "function") {
-         document.getElementById("datatext").innerHTML =
-            "DeviceOrientationEvent.requestPermission not detected";
-      }
-      DeviceOrientationEvent.requestPermission().then(function (
-         permissionStateOrien
-      ) {
-         if (permissionStateOrien === "granted") {
-            DeviceMotionEvent.requestPermission().then(function (
-               permissionStateMotion
-            ) {
-               if (permissionStateMotion === "granted") {
-                  document.getElementById("datatext").innerHTML = `OK`;
-                  isGamestart = true;
-               }
-            });
-         } else {
-            document.getElementById("datatext").innerHTML = `😭`;
-         }
-      });
-   } else {
-      document
-         .getElementById("top-page")
-         .addEventListener("transitionend", () => {
-            isGamestart = true;
-         });
-      document
-         .getElementById("top-page")
-         .addEventListener("webkitTransitionend", () => {
-            isGamestart = true;
-         });
-   }
-}
