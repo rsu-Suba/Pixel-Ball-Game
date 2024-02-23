@@ -2,7 +2,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="theme-color" content="#dbb981"/>
+  <meta name="theme-color" content="#c68e51"/>
   <link rel="icon" href="./assets/favicon.ico">
   <link rel="stylesheet" href="main.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
@@ -22,8 +22,8 @@
     <div class="bg-wall"></div>
     <div class="bg-grid"></div>
   </div>
-  <text class="datatext" id="datatext"></text>
-  <text class="ver" id="ver" style="position:fixed;right: 2vw;">2.23.24.1</text>
+  <text class="datatext" id="datatext" style="font-size:3vw;">ジャイロ機能は使えません</text>
+  <text class="ver" id="ver" style="position:fixed;right: 2vw;">2.23.24.2</text>
   <canvas id="maincanvas"></canvas>
   <div class="data">
     <div class="score">
@@ -59,7 +59,7 @@
     </div>
     <div class="top-page-buttons pause-page">
         <button class="start" onclick="pause(1);">続きから</button>
-        <button class="rot" onclick="pause(2);">最初から</button>
+        <button class="rot" onclick="pause(2);">タイトルに戻る</button>
     </div>
   </div>
   <div class="gameover play" id="gameover">
@@ -69,15 +69,15 @@
     <div class="top-page-buttons pause-page gameover-buttons" id="gameover-buttons">
       <div class="scores" id="scores">
         <div class="scores-div">
-          <text id="hiScore" class="scores-text">412</text>
+          <text id="hiScore" class="scores-text"></text>
           <text class="scores-exp">ハイスコア</text>
         </div>
         <div class="scores-div">
-          <text id="getScore" class="scores-text">124</text>
+          <text id="getScore" class="scores-text"></text>
           <text class="scores-exp">スコア</text>
         </div>
         <div class="scores-div">
-          <text id="hiScore-getScore" class="scores-text">288</text>
+          <text id="hiScore-getScore" class="scores-text"></text>
           <text id="hiScore-getScore-exp" class="scores-exp">ハイスコアまで</text>
         </div>
       </div>

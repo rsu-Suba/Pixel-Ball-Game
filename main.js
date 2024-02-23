@@ -495,10 +495,9 @@ function drop() {
 }
 
 function gameover() {
-   //document.getElementById("gameover-text-str").innerHTML = `Game Over ${gameover_face[Math.floor(Math.random() * 4)]}`;
-   document.getElementById(
-      "gameover-text-str"
-   ).innerHTML = `Game Over ${gameover_face[0]}`;
+   document.getElementById("gameover-text-str").innerHTML = `Game Over ${
+      gameover_face[Math.floor(Math.random() * 4)]
+   }`;
    gameover_page.className = "top-page";
    top_page.className = "play";
    gameover_score.innerHTML = score;

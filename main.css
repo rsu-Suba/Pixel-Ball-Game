@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@500&family=Noto+Sans+JP:wght@500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@500&family=Noto+Sans+JP:wght@500&family=Carter+One&display=swap&display=swap");
 
 body {
    background-color: #f4eebc;
@@ -10,6 +10,7 @@ p,
 text,
 button {
    font-family: "Inter", "Noto Sans JP", sans-serif;
+   white-space: nowrap;
 }
 
 .background-solid {
@@ -145,7 +146,6 @@ button {
       text-stroke: 1px #a96b17;
       font-size: min(8vw, max(4.5vh));
       text-align: center;
-      font-weight: 600;
       position: absolute;
       margin: 34% 0;
       height: 10.5vh;
@@ -158,11 +158,11 @@ button {
 
    .hiscoretext {
       color: #ece2cc;
-      -webkit-text-stroke: 0.6px #a96b17;
-      text-stroke: 0.6px #a96b17;
+      font-family: "Carter One";
+      -webkit-text-stroke: 2px #a96b17;
+      text-stroke: 2px #a96b17;
       font-size: min(4vw, max(1.5vh));
       text-align: center;
-      font-weight: 600;
       position: absolute;
       margin: 34% 0;
       top: 50;
@@ -190,6 +190,7 @@ button {
    .back-panel {
       backdrop-filter: blur(1vh);
       -webkit-backdrop-filter: blur(1vh);
+
       height: 100%;
       width: 100%;
       position: fixed;
@@ -203,6 +204,7 @@ button {
    .back-panel-play {
       backdrop-filter: blur(0vh);
       -webkit-backdrop-filter: blur(0vh);
+
       height: 100%;
       width: 100%;
       position: fixed;
@@ -219,8 +221,6 @@ button {
    #gameover,
    .top-page {
       background-color: rgba(255, 255, 255, 0.4);
-      backdrop-filter: blur(2vh);
-      -webkit-backdrop-filter: blur(2vh);
       height: 65%;
       width: 80%;
       display: flex !important;
@@ -245,8 +245,6 @@ button {
    #pause-page.play,
    #gameover.play {
       background-color: rgba(255, 255, 255, 0.4);
-      backdrop-filter: blur(2vh);
-      -webkit-backdrop-filter: blur(2vh);
       transition: 0.5s;
       filter: blur(20vh);
       opacity: 0;
@@ -255,6 +253,7 @@ button {
 
    .top-text-div {
       font-size: 125%;
+      background-color: rgba(255, 255, 255, 0.3);
       backdrop-filter: blur(10vh);
       -webkit-backdrop-filter: blur(10vh);
       box-shadow: rgba(0, 0, 0, 0.3) 0 1vh 2vh;
@@ -274,26 +273,20 @@ button {
 
    .top-page-buttons {
       position: relative;
-      height: 51vh;
-      width: calc(80vw - 8vh);
-      margin: auto;
+      height: 90%;
+      width: calc(80vw - 16%);
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      justify-content: space-evenly;
       transition: 0.6s ease-in-out;
    }
 
-   .rot {
-      position: relative;
-      bottom: 7vh;
-   }
-
    .top-page-buttons button {
-      background-color: rgba(255, 255, 255, 0.1);
+      background-color: rgba(255, 255, 255, 0.3);
       backdrop-filter: blur(0.1vh);
       -webkit-backdrop-filter: blur(0.1vh);
       width: 100%;
-      height: 40%;
+      height: 18vh;
       font-size: 2.2vh;
       text-decoration: none;
       color: #000;
@@ -306,9 +299,8 @@ button {
       width: 40%;
       height: 8%;
       font-size: 1.2vh;
-      right: 0;
-      bottom: 0;
-      position: absolute;
+      left: 60%;
+      position: relative;
    }
 
    #canthiscore,
@@ -317,7 +309,7 @@ button {
       height: 8%;
       font-size: 1.2vh;
       left: 0;
-      bottom: -5;
+      bottom: 8%;
       position: absolute;
       white-space: nowrap;
       text-align: left;
@@ -346,7 +338,7 @@ button {
       left: 0;
       right: 0;
       position: absolute;
-      font-size: 300%;
+      font-size: 5vh;
    }
 
    #pause-button {
@@ -357,12 +349,8 @@ button {
       background-color: rgba(0, 0, 0, 0);
    }
 
-   .pause-page {
-      justify-content: space-between;
-   }
-
-   .pause-page .rot {
-      bottom: 0;
+   .pause-page button {
+      height: 40%;
    }
 
    .scores {
