@@ -22,7 +22,7 @@ const Events = Matter.Events;
 const World = Matter.World;
 const framecolor = "#f3d583";
 const framepanelcolor = "rgba(255, 245, 225, 0.3)";
-const gameover_face = ["₍ᐢ.ˬ.ᐡ₎", "( ^)o(^ )b", "乁( ˙ ω˙乁)", "✌︎('ω'✌︎ )"];
+const gameover_face = ["(ᐢ'v'ᐡ)", "( ^)o(^ )b", "乁( ˙ ω˙乁)", "✌︎('ω'✌︎ )"];
 const points = [1, 3, 6, 10, 15, 21, 36, 45, 55, 66, 78];
 let ballsize = [
    Math.floor(WIDTH / (550 / 18)),
@@ -651,6 +651,12 @@ function restart(mode) {
       case 1:
          top_page.className = "play";
          gameover_page.className = "play";
+         for (let i = 0; i < 3; i++) {
+            document.getElementsByClassName("scores-text")[i].style.fontSize =
+               "0%";
+            document.getElementsByClassName("scores-exp")[i].style.fontSize =
+               "0%";
+         }
          back_panel_play(0);
          isGameover = false;
          isGameStartMenu = 1;
