@@ -495,7 +495,8 @@ function drop() {
 }
 
 function gameover() {
-   if (!isGameover) {
+   if (isGameover == false) {
+      isGameover = true;
       gameover_page.classList = "gameover play";
       document.getElementById("gameover-text").classList =
          "top-text-div gameover-text-div";
@@ -508,7 +509,6 @@ function gameover() {
       top_page.className = "play";
       gameover_score.innerHTML = score;
       gameover_hiscore_getscore.innerHTML = hiscore - score + 1;
-      isGameover = true;
       isGamestart = false;
       if (score > hiscore) {
          hiscore = score;
