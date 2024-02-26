@@ -649,14 +649,14 @@ function restart(mode) {
          isGameStartMenu = 0;
          break;
       case 1:
-         top_page.className = "play";
-         gameover_page.className = "play";
          for (let i = 0; i < 3; i++) {
             document.getElementsByClassName("scores-text")[i].style.fontSize =
                "0%";
             document.getElementsByClassName("scores-exp")[i].style.fontSize =
                "0%";
          }
+         top_page.className = "play";
+         gameover_page.className = "play";
          back_panel_play(0);
          isGameover = false;
          isGameStartMenu = 1;
