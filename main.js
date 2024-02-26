@@ -495,34 +495,41 @@ function drop() {
 }
 
 function gameover() {
-   document.getElementById("gameover-text-str").innerHTML = `Game Over ${
-      gameover_face[Math.floor(Math.random() * 4)]
-   }`;
-   gameover_page.className = "top-page";
-   top_page.className = "play";
-   gameover_score.innerHTML = score;
-   gameover_hiscore_getscore.innerHTML = hiscore - score + 1;
-   isGameover = true;
-   isGamestart = false;
-   if (score > hiscore) {
-      hiscore = score;
-      document.cookie = "hiscore=0; max-age=0";
-      document.cookie = "hiscore=" + score;
-      gameover_hiscore_getscore.innerHTML = `更新`;
-   }
-   gameover_hiscore.innerHTML = hiscore;
-   sleep(1.5, function () {
-      document.getElementById("gameover-text").className = "top-text-div";
+   if (!gameover) {
+      gameover_page.classList = "gameover play";
+      document.getElementById("gameover-text").classList =
+         "top-text-div gameover-text-div";
       document.getElementById("gameover-buttons").classList =
-         "top-page-buttons pause-page";
-      back_panel_play(1);
-      for (let i = 0; i < 3; i++) {
-         document.getElementsByClassName("scores-text")[i].style.fontSize =
-            "125%";
-         document.getElementsByClassName("scores-exp")[i].style.fontSize =
-            "55%";
+         "top-page-buttons pause-page gameover-buttons";
+      document.getElementById("gameover-text-str").innerHTML = `Game Over ${
+         gameover_face[Math.floor(Math.random() * 4)]
+      }`;
+      gameover_page.className = "top-page";
+      top_page.className = "play";
+      gameover_score.innerHTML = score;
+      gameover_hiscore_getscore.innerHTML = hiscore - score + 1;
+      isGameover = true;
+      isGamestart = false;
+      if (score > hiscore) {
+         hiscore = score;
+         document.cookie = "hiscore=0; max-age=0";
+         document.cookie = "hiscore=" + score;
+         gameover_hiscore_getscore.innerHTML = `更新`;
       }
-   });
+      gameover_hiscore.innerHTML = hiscore;
+      sleep(1.5, function () {
+         document.getElementById("gameover-text").className = "top-text-div";
+         document.getElementById("gameover-buttons").classList =
+            "top-page-buttons pause-page";
+         back_panel_play(1);
+         for (let i = 0; i < 3; i++) {
+            document.getElementsByClassName("scores-text")[i].style.fontSize =
+               "125%";
+            document.getElementsByClassName("scores-exp")[i].style.fontSize =
+               "55%";
+         }
+      });
+   }
 }
 
 function osdetect() {
@@ -552,6 +559,11 @@ function start() {
    isGameStartMenu = 1;
    back_panel_play(0);
    top_page.className = "play";
+   engine.gravity.x = 0;
+   engine.gravity.y = 1;
+   ground.label = "ground";
+   left.label = "wall";
+   right.label = "wall";
    gravityMode = 0;
    document.getElementById("deletehiscore").style.opacity = 0;
    document.getElementById("datatext").innerHTML = "";
