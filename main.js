@@ -495,7 +495,7 @@ function drop() {
 }
 
 function gameover() {
-   if (!gameover) {
+   if (!isGameover) {
       gameover_page.classList = "gameover play";
       document.getElementById("gameover-text").classList =
          "top-text-div gameover-text-div";
